@@ -75,6 +75,18 @@ func (r *TrainingScheduleRepository) ListActive(ctx context.Context, communityID
 	return result, nil
 }
 
+func (r *TrainingScheduleRepository) ListAll(ctx context.Context, communityID uuid.UUID) ([]domain.TrainingSchedule, error) {
+	rows, err := r.q.ListAllTrainingSchedules(ctx, communityID)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]domain.TrainingSchedule, 0, len(rows))
+	for _, t := range rows {
+		result = append(result, *toDomainTrainingSchedule(t))
+	}
+	return result, nil
+}
+
 func (r *TrainingScheduleRepository) Update(ctx context.Context, params domain.UpdateTrainingScheduleParams) (*domain.TrainingSchedule, error) {
 	startTime, err := stringToPgTime(params.StartTime)
 	if err != nil {

@@ -611,6 +611,46 @@ paths:
             summary: Update an achievement
             tags:
                 - achievements
+    /admin/announcements:
+        get:
+            parameters:
+                - description: Page number
+                  in: query
+                  name: page
+                  schema:
+                    default: 1
+                    type: integer
+                - description: Items per page
+                  in: query
+                  name: per_page
+                  schema:
+                    default: 20
+                    type: integer
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/response.Envelope'
+                                    - properties:
+                                        data:
+                                            items:
+                                                $ref: '#/components/schemas/handler.announcementDTO'
+                                            type: array
+                                      type: object
+                    description: OK
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/response.Envelope'
+                    description: Forbidden
+            security:
+                - BearerAuth: []
+            summary: List all announcements for admin management (includes drafts)
+            tags:
+                - announcements
     /admin/dashboard/summary:
         get:
             responses:
@@ -631,6 +671,73 @@ paths:
             summary: Admin dashboard summary
             tags:
                 - admin
+    /admin/events:
+        get:
+            parameters:
+                - description: Page number
+                  in: query
+                  name: page
+                  schema:
+                    default: 1
+                    type: integer
+                - description: Items per page
+                  in: query
+                  name: per_page
+                  schema:
+                    default: 20
+                    type: integer
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/response.Envelope'
+                                    - properties:
+                                        data:
+                                            items:
+                                                $ref: '#/components/schemas/handler.eventDTO'
+                                            type: array
+                                      type: object
+                    description: OK
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/response.Envelope'
+                    description: Forbidden
+            security:
+                - BearerAuth: []
+            summary: List all events for admin management (includes private events)
+            tags:
+                - events
+    /admin/schedules:
+        get:
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                allOf:
+                                    - $ref: '#/components/schemas/response.Envelope'
+                                    - properties:
+                                        data:
+                                            items:
+                                                $ref: '#/components/schemas/handler.trainingScheduleDTO'
+                                            type: array
+                                      type: object
+                    description: OK
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/response.Envelope'
+                    description: Forbidden
+            security:
+                - BearerAuth: []
+            summary: List all training schedules for admin management (includes inactive)
+            tags:
+                - schedules
     /announcements:
         get:
             parameters:

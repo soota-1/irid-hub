@@ -29,6 +29,18 @@ func (s *EventService) ListPublic(ctx context.Context, params domain.ListEventsP
 	return items, total, nil
 }
 
+// ListForAdmin returns events regardless of is_public — the admin panel
+// needs to see and manage private events too — Task.md Phase 2.4.
+func (s *EventService) ListForAdmin(ctx context.Context, params domain.ListEventsParams) ([]domain.Event, int64, error) {
+	params.PublicOnly = false
+	params.Page, params.PerPage = normalizePage(params.Page, params.PerPage)
+	items, total, err := s.repo.List(ctx, params)
+	if err != nil {
+		return nil, 0, fmt.Errorf("list events for admin: %w", err)
+	}
+	return items, total, nil
+}
+
 // GetPublicByID hides private events from anonymous callers by returning
 // ErrNotFound instead of leaking their existence.
 func (s *EventService) GetPublicByID(ctx context.Context, id uuid.UUID) (*domain.Event, error) {

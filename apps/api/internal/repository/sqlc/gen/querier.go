@@ -12,6 +12,7 @@ import (
 
 type Querier interface {
 	CountAchievements(ctx context.Context, communityID uuid.UUID) (int64, error)
+	CountAllAnnouncements(ctx context.Context, communityID uuid.UUID) (int64, error)
 	CountAnnouncements(ctx context.Context, arg CountAnnouncementsParams) (int64, error)
 	CountEvents(ctx context.Context, arg CountEventsParams) (int64, error)
 	CountGalleryItems(ctx context.Context, arg CountGalleryItemsParams) (int64, error)
@@ -45,6 +46,12 @@ type Querier interface {
 	HasPendingMembershipApplicationByEmail(ctx context.Context, arg HasPendingMembershipApplicationByEmailParams) (bool, error)
 	ListAchievements(ctx context.Context, arg ListAchievementsParams) ([]Achievement, error)
 	ListActiveTrainingSchedules(ctx context.Context, communityID uuid.UUID) ([]TrainingSchedule, error)
+	// Admin-only: unlike ListAnnouncements, includes drafts (published_at IS
+	// NULL) and members_only entries regardless of caller — Task.md Phase 2.4.
+	ListAllAnnouncements(ctx context.Context, arg ListAllAnnouncementsParams) ([]Announcement, error)
+	// Admin-only: unlike ListActiveTrainingSchedules, includes inactive rows
+	// so admins can find and reactivate them — Task.md Phase 2.4.
+	ListAllTrainingSchedules(ctx context.Context, communityID uuid.UUID) ([]TrainingSchedule, error)
 	ListAnnouncements(ctx context.Context, arg ListAnnouncementsParams) ([]Announcement, error)
 	ListEvents(ctx context.Context, arg ListEventsParams) ([]Event, error)
 	ListGalleryItems(ctx context.Context, arg ListGalleryItemsParams) ([]GalleryItem, error)

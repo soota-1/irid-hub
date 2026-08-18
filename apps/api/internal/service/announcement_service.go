@@ -46,6 +46,17 @@ func (s *AnnouncementService) ListInternal(ctx context.Context, communityID uuid
 	return items, total, nil
 }
 
+// ListForAdmin is admin-only: includes drafts and members_only entries
+// regardless of published state — Task.md Phase 2.4.
+func (s *AnnouncementService) ListForAdmin(ctx context.Context, communityID uuid.UUID, page, perPage int) ([]domain.Announcement, int64, error) {
+	page, perPage = normalizePage(page, perPage)
+	items, total, err := s.repo.ListAll(ctx, domain.ListAllAnnouncementsParams{CommunityID: communityID, Page: page, PerPage: perPage})
+	if err != nil {
+		return nil, 0, fmt.Errorf("list announcements for admin: %w", err)
+	}
+	return items, total, nil
+}
+
 func (s *AnnouncementService) Create(ctx context.Context, params domain.CreateAnnouncementParams) (*domain.Announcement, error) {
 	if err := validateAnnouncementFields(params.Title, params.Content, params.Urgency, params.Visibility); err != nil {
 		return nil, err

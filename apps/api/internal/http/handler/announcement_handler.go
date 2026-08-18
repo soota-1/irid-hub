@@ -96,6 +96,37 @@ func (h *AnnouncementHandler) ListPublic(c *gin.Context) { h.listCommon(c, false
 // @Router    /announcements/internal [get]
 func (h *AnnouncementHandler) ListInternal(c *gin.Context) { h.listCommon(c, true) }
 
+// ListAdmin godoc
+// @Summary   List all announcements for admin management (includes drafts)
+// @Tags      announcements
+// @Produce   json
+// @Security  BearerAuth
+// @Param     page      query     int  false  "Page number"     default(1)
+// @Param     per_page  query     int  false  "Items per page"  default(20)
+// @Success   200  {object}  response.Envelope{data=[]announcementDTO}
+// @Failure   403  {object}  response.Envelope
+// @Router    /admin/announcements [get]
+func (h *AnnouncementHandler) ListAdmin(c *gin.Context) {
+	community, err := h.communityRepo.GetCurrent(c.Request.Context())
+	if err != nil {
+		handleServiceError(c, err)
+		return
+	}
+	page, perPage := parsePagination(c)
+
+	items, total, err := h.svc.ListForAdmin(c.Request.Context(), community.ID, page, perPage)
+	if err != nil {
+		handleServiceError(c, err)
+		return
+	}
+
+	dtos := make([]announcementDTO, 0, len(items))
+	for i := range items {
+		dtos = append(dtos, toAnnouncementDTO(&items[i]))
+	}
+	response.OKPaginated(c, dtos, response.Meta{Page: page, PerPage: perPage, Total: total})
+}
+
 type upsertAnnouncementRequest struct {
 	Title       string     `json:"title" binding:"required"`
 	Content     string     `json:"content" binding:"required"`

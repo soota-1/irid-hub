@@ -94,6 +94,7 @@ func NewRouter(cfg *config.Config, pool *pgxpool.Pool, jwks keyfunc.Keyfunc, log
 		v1.PATCH("/membership-applications/:id/approve", auth, requireAdmin, applicationH.Approve)
 		v1.PATCH("/membership-applications/:id/reject", auth, requireAdmin, applicationH.Reject)
 
+		v1.GET("/admin/events", auth, requireAdmin, eventH.ListAdmin)
 		v1.GET("/events", eventH.List)
 		v1.GET("/events/:id", eventH.GetByID)
 		v1.POST("/events", auth, requireAdmin, eventH.Create)
@@ -101,11 +102,13 @@ func NewRouter(cfg *config.Config, pool *pgxpool.Pool, jwks keyfunc.Keyfunc, log
 		v1.DELETE("/events/:id", auth, requireAdmin, eventH.Delete)
 		v1.POST("/events/:id/rsvp", auth, requireMember, eventH.Rsvp)
 
+		v1.GET("/admin/schedules", auth, requireAdmin, scheduleH.ListAdmin)
 		v1.GET("/schedules", scheduleH.List)
 		v1.POST("/schedules", auth, requireAdmin, scheduleH.Create)
 		v1.PATCH("/schedules/:id", auth, requireAdmin, scheduleH.Update)
 		v1.DELETE("/schedules/:id", auth, requireAdmin, scheduleH.Delete)
 
+		v1.GET("/admin/announcements", auth, requireAdmin, announcementH.ListAdmin)
 		v1.GET("/announcements", announcementH.ListPublic)
 		v1.GET("/announcements/internal", auth, requireMember, announcementH.ListInternal)
 		v1.POST("/announcements", auth, requireAdmin, announcementH.Create)

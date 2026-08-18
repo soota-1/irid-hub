@@ -50,6 +50,10 @@ func (s *GalleryService) List(ctx context.Context, params domain.ListGalleryItem
 type PresignedUpload struct {
 	UploadURL string
 	ObjectKey string
+	// PublicURL is where the object will be reachable once uploaded —
+	// the client needs this to call Create() afterwards, since only the
+	// backend knows the R2 public base URL (R2_PUBLIC_URL).
+	PublicURL string
 }
 
 // PresignUpload validates the file type/size against the allow-list
@@ -72,7 +76,7 @@ func (s *GalleryService) PresignUpload(ctx context.Context, communityID uuid.UUI
 	if err != nil {
 		return nil, fmt.Errorf("presign gallery upload: %w", err)
 	}
-	return &PresignedUpload{UploadURL: uploadURL, ObjectKey: objectKey}, nil
+	return &PresignedUpload{UploadURL: uploadURL, ObjectKey: objectKey, PublicURL: s.storage.PublicURL(objectKey)}, nil
 }
 
 func (s *GalleryService) Create(ctx context.Context, params domain.CreateGalleryItemParams) (*domain.GalleryItem, error) {

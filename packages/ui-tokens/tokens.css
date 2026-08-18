@@ -1,0 +1,68 @@
+/**
+ * Design tokens — source of truth, mirrors docs/Design.md §2–§4.
+ * Also exported (as JSON) to packages/ui-tokens so Flutter can share the
+ * same palette/spacing — see docs/Design.md §9.
+ */
+:root {
+  /* Netral (dominan untuk teks & surface) */
+  --neutral-950: #14121a;
+  --neutral-800: #2b2733;
+  --neutral-500: #6e6779;
+  --neutral-200: #e7e3ee;
+  --neutral-50: #fbfafe;
+
+  /* Spektrum Iridescent — dipakai bergantian per section/fitur */
+  --iri-violet: #8b5cf6;
+  --iri-magenta: #ec4899;
+  --iri-coral: #fb7185;
+  --iri-amber: #fbbf24;
+  --iri-mint: #34d399;
+  --iri-cyan: #22d3ee;
+  --iri-azure: #60a5fa;
+
+  /* Gradient mesh utama (hero, header admin, badge highlight) */
+  --gradient-iridescent: linear-gradient(
+    120deg,
+    var(--iri-violet) 0%,
+    var(--iri-magenta) 25%,
+    var(--iri-coral) 45%,
+    var(--iri-amber) 65%,
+    var(--iri-mint) 85%,
+    var(--iri-cyan) 100%
+  );
+
+  /* Identitas per fitur (Design.md §2) */
+  --gradient-events: linear-gradient(120deg, var(--iri-violet) 0%, var(--iri-magenta) 100%);
+  --gradient-schedules: linear-gradient(120deg, var(--iri-cyan) 0%, var(--iri-azure) 100%);
+  --gradient-achievements: linear-gradient(120deg, var(--iri-amber) 0%, var(--iri-coral) 100%);
+  --gradient-gallery: linear-gradient(120deg, var(--iri-mint) 0%, var(--iri-cyan) 100%);
+
+  /* Semantic */
+  --success: var(--iri-mint);
+  --warning: var(--iri-amber);
+  --danger: #f43f5e;
+  --info: var(--iri-azure);
+
+  /* Surface (light) */
+  --surface: var(--neutral-50);
+  --surface-text: var(--neutral-800);
+  --surface-text-muted: var(--neutral-500);
+
+  /* Radius (Design.md §4) */
+  --radius-lg: 24px;
+  --radius-md: 12px;
+}
+
+:root[data-theme="dark"] {
+  --surface: var(--neutral-950);
+  --surface-text: var(--neutral-50);
+  --surface-text-muted: var(--neutral-200);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: var(--neutral-950);
+    --surface-text: var(--neutral-50);
+    --surface-text-muted: var(--neutral-200);
+  }
+}

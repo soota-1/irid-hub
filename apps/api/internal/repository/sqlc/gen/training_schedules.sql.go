@@ -123,6 +123,45 @@ func (q *Queries) ListActiveTrainingSchedules(ctx context.Context, communityID u
 	return items, nil
 }
 
+const listAllTrainingSchedules = `-- name: ListAllTrainingSchedules :many
+SELECT id, community_id, title, day_of_week, start_time, end_time, location, is_active, created_at, updated_at FROM training_schedules
+WHERE community_id = $1
+ORDER BY day_of_week ASC, start_time ASC
+`
+
+// Admin-only: unlike ListActiveTrainingSchedules, includes inactive rows
+// so admins can find and reactivate them — Task.md Phase 2.4.
+func (q *Queries) ListAllTrainingSchedules(ctx context.Context, communityID uuid.UUID) ([]TrainingSchedule, error) {
+	rows, err := q.db.Query(ctx, listAllTrainingSchedules, communityID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []TrainingSchedule
+	for rows.Next() {
+		var i TrainingSchedule
+		if err := rows.Scan(
+			&i.ID,
+			&i.CommunityID,
+			&i.Title,
+			&i.DayOfWeek,
+			&i.StartTime,
+			&i.EndTime,
+			&i.Location,
+			&i.IsActive,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateTrainingSchedule = `-- name: UpdateTrainingSchedule :one
 UPDATE training_schedules
 SET title = $1,

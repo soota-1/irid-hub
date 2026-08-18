@@ -15,6 +15,9 @@ func Test_GalleryService_PresignUpload_ReturnsUploadURLForAllowedType(t *testing
 		presignUpload: func(ctx context.Context, objectKey, contentType string) (string, error) {
 			return "https://r2.example.com/" + objectKey, nil
 		},
+		publicURL: func(objectKey string) string {
+			return "https://pub.example.com/" + objectKey
+		},
 	}
 	svc := NewGalleryService(&mockGalleryRepo{}, storage)
 
@@ -23,6 +26,7 @@ func Test_GalleryService_PresignUpload_ReturnsUploadURLForAllowedType(t *testing
 	require.NoError(t, err)
 	assert.NotEmpty(t, got.UploadURL)
 	assert.NotEmpty(t, got.ObjectKey)
+	assert.NotEmpty(t, got.PublicURL)
 }
 
 func Test_GalleryService_PresignUpload_RejectsDisallowedContentType(t *testing.T) {

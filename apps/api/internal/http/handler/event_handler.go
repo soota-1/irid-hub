@@ -99,6 +99,37 @@ func (h *EventHandler) List(c *gin.Context) {
 	response.OKPaginated(c, dtos, response.Meta{Page: page, PerPage: perPage, Total: total})
 }
 
+// ListAdmin godoc
+// @Summary   List all events for admin management (includes private events)
+// @Tags      events
+// @Produce   json
+// @Security  BearerAuth
+// @Param     page      query     int     false  "Page number"     default(1)
+// @Param     per_page  query     int     false  "Items per page"  default(20)
+// @Success   200  {object}  response.Envelope{data=[]eventDTO}
+// @Failure   403  {object}  response.Envelope
+// @Router    /admin/events [get]
+func (h *EventHandler) ListAdmin(c *gin.Context) {
+	community, err := h.communityRepo.GetCurrent(c.Request.Context())
+	if err != nil {
+		handleServiceError(c, err)
+		return
+	}
+	page, perPage := parsePagination(c)
+
+	items, total, err := h.svc.ListForAdmin(c.Request.Context(), domain.ListEventsParams{CommunityID: community.ID, Page: page, PerPage: perPage})
+	if err != nil {
+		handleServiceError(c, err)
+		return
+	}
+
+	dtos := make([]eventDTO, 0, len(items))
+	for i := range items {
+		dtos = append(dtos, toEventDTO(&items[i]))
+	}
+	response.OKPaginated(c, dtos, response.Meta{Page: page, PerPage: perPage, Total: total})
+}
+
 // GetByID godoc
 // @Summary      Get a public event
 // @Description  Private events are hidden from anonymous callers (returned as 404).

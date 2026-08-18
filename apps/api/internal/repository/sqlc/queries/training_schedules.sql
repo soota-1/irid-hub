@@ -12,6 +12,13 @@ SELECT * FROM training_schedules
 WHERE community_id = sqlc.arg(community_id) AND is_active = true
 ORDER BY day_of_week ASC, start_time ASC;
 
+-- name: ListAllTrainingSchedules :many
+-- Admin-only: unlike ListActiveTrainingSchedules, includes inactive rows
+-- so admins can find and reactivate them — Task.md Phase 2.4.
+SELECT * FROM training_schedules
+WHERE community_id = sqlc.arg(community_id)
+ORDER BY day_of_week ASC, start_time ASC;
+
 -- name: UpdateTrainingSchedule :one
 UPDATE training_schedules
 SET title = sqlc.arg(title),

@@ -21,6 +21,17 @@ WHERE community_id = sqlc.arg(community_id)
   AND published_at IS NOT NULL
   AND (sqlc.arg(include_members)::bool OR visibility = 'public');
 
+-- name: ListAllAnnouncements :many
+-- Admin-only: unlike ListAnnouncements, includes drafts (published_at IS
+-- NULL) and members_only entries regardless of caller — Task.md Phase 2.4.
+SELECT * FROM announcements
+WHERE community_id = sqlc.arg(community_id)
+ORDER BY created_at DESC
+LIMIT sqlc.arg(page_limit) OFFSET sqlc.arg(page_offset);
+
+-- name: CountAllAnnouncements :one
+SELECT count(*) FROM announcements WHERE community_id = sqlc.arg(community_id);
+
 -- name: UpdateAnnouncement :one
 UPDATE announcements
 SET title = sqlc.arg(title),

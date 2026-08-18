@@ -14,6 +14,9 @@
 node_modules/
 apps/web/dist/
 apps/web/.vite/
+apps/web/playwright-report/
+apps/web/test-results/
+apps/web/*.tsbuildinfo
 
 # Go / api
 apps/api/tmp/

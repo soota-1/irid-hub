@@ -61,6 +61,21 @@ func Test_AnnouncementService_ListPublic_ExcludesMembersOnly(t *testing.T) {
 	assert.Equal(t, int64(1), total)
 }
 
+func Test_AnnouncementService_ListForAdmin_IncludesDrafts(t *testing.T) {
+	repo := &mockAnnouncementRepo{
+		listAll: func(ctx context.Context, params domain.ListAllAnnouncementsParams) ([]domain.Announcement, int64, error) {
+			return []domain.Announcement{{ID: uuid.New(), PublishedAt: nil}}, 1, nil
+		},
+	}
+	svc := NewAnnouncementService(repo)
+
+	items, total, err := svc.ListForAdmin(context.Background(), uuid.New(), 1, 20)
+
+	require.NoError(t, err)
+	assert.Len(t, items, 1)
+	assert.Equal(t, int64(1), total)
+}
+
 func Test_AnnouncementService_Create_SavesAnnouncement(t *testing.T) {
 	want := &domain.Announcement{ID: uuid.New(), Title: "Info"}
 	repo := &mockAnnouncementRepo{

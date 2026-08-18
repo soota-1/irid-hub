@@ -41,6 +41,8 @@ type TrainingScheduleRepository interface {
 	Create(ctx context.Context, params CreateTrainingScheduleParams) (*TrainingSchedule, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*TrainingSchedule, error)
 	ListActive(ctx context.Context, communityID uuid.UUID) ([]TrainingSchedule, error)
+	// ListAll is admin-only: includes inactive schedules too — Task.md Phase 2.4.
+	ListAll(ctx context.Context, communityID uuid.UUID) ([]TrainingSchedule, error)
 	Update(ctx context.Context, params UpdateTrainingScheduleParams) (*TrainingSchedule, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }

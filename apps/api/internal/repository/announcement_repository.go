@@ -84,6 +84,29 @@ func (r *AnnouncementRepository) List(ctx context.Context, params domain.ListAnn
 	return result, total, nil
 }
 
+func (r *AnnouncementRepository) ListAll(ctx context.Context, params domain.ListAllAnnouncementsParams) ([]domain.Announcement, int64, error) {
+	offset := (params.Page - 1) * params.PerPage
+	rows, err := r.q.ListAllAnnouncements(ctx, sqlcgen.ListAllAnnouncementsParams{
+		CommunityID: params.CommunityID,
+		PageLimit:   int32(params.PerPage),
+		PageOffset:  int32(offset),
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := r.q.CountAllAnnouncements(ctx, params.CommunityID)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	result := make([]domain.Announcement, 0, len(rows))
+	for _, a := range rows {
+		result = append(result, *toDomainAnnouncement(a))
+	}
+	return result, total, nil
+}
+
 func (r *AnnouncementRepository) Update(ctx context.Context, params domain.UpdateAnnouncementParams) (*domain.Announcement, error) {
 	a, err := r.q.UpdateAnnouncement(ctx, sqlcgen.UpdateAnnouncementParams{
 		ID:          params.ID,

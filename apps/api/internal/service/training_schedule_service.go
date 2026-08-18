@@ -24,6 +24,15 @@ func (s *TrainingScheduleService) ListActive(ctx context.Context, communityID uu
 	return items, nil
 }
 
+// ListAll is admin-only: includes inactive schedules — Task.md Phase 2.4.
+func (s *TrainingScheduleService) ListAll(ctx context.Context, communityID uuid.UUID) ([]domain.TrainingSchedule, error) {
+	items, err := s.repo.ListAll(ctx, communityID)
+	if err != nil {
+		return nil, fmt.Errorf("list all training schedules: %w", err)
+	}
+	return items, nil
+}
+
 func (s *TrainingScheduleService) Create(ctx context.Context, params domain.CreateTrainingScheduleParams) (*domain.TrainingSchedule, error) {
 	if err := validateScheduleFields(params.Title, params.DayOfWeek); err != nil {
 		return nil, err

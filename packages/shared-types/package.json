@@ -1,0 +1,8 @@
+{
+  "name": "@irid-hub/shared-types",
+  "private": true,
+  "version": "0.1.0",
+  "description": "TypeScript types generated from apps/api's OpenAPI 3 spec — see docs/Architecture.md §7. Regenerate with: npm run generate (from apps/web, which owns the openapi-typescript devDependency).",
+  "main": "api.ts",
+  "types": "api.ts"
+}

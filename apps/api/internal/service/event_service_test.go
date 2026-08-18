@@ -60,6 +60,22 @@ func Test_EventService_Create_RejectsEndBeforeStart(t *testing.T) {
 	require.ErrorAs(t, err, &validationErr)
 }
 
+func Test_EventService_ListForAdmin_IncludesPrivateEvents(t *testing.T) {
+	repo := &mockEventRepo{
+		list: func(ctx context.Context, params domain.ListEventsParams) ([]domain.Event, int64, error) {
+			assert.False(t, params.PublicOnly)
+			return []domain.Event{{ID: uuid.New(), IsPublic: false}}, 1, nil
+		},
+	}
+	svc := NewEventService(repo)
+
+	items, total, err := svc.ListForAdmin(context.Background(), domain.ListEventsParams{PublicOnly: true})
+
+	require.NoError(t, err)
+	assert.Len(t, items, 1)
+	assert.Equal(t, int64(1), total)
+}
+
 func Test_EventService_ListPublic_ForcesPublicOnly(t *testing.T) {
 	repo := &mockEventRepo{
 		list: func(ctx context.Context, params domain.ListEventsParams) ([]domain.Event, int64, error) {

@@ -67,6 +67,32 @@ func (h *TrainingScheduleHandler) List(c *gin.Context) {
 	response.OK(c, http.StatusOK, dtos)
 }
 
+// ListAdmin godoc
+// @Summary   List all training schedules for admin management (includes inactive)
+// @Tags      schedules
+// @Produce   json
+// @Security  BearerAuth
+// @Success   200  {object}  response.Envelope{data=[]trainingScheduleDTO}
+// @Failure   403  {object}  response.Envelope
+// @Router    /admin/schedules [get]
+func (h *TrainingScheduleHandler) ListAdmin(c *gin.Context) {
+	community, err := h.communityRepo.GetCurrent(c.Request.Context())
+	if err != nil {
+		handleServiceError(c, err)
+		return
+	}
+	items, err := h.svc.ListAll(c.Request.Context(), community.ID)
+	if err != nil {
+		handleServiceError(c, err)
+		return
+	}
+	dtos := make([]trainingScheduleDTO, 0, len(items))
+	for i := range items {
+		dtos = append(dtos, toTrainingScheduleDTO(&items[i]))
+	}
+	response.OK(c, http.StatusOK, dtos)
+}
+
 type upsertTrainingScheduleRequest struct {
 	Title     string `json:"title" binding:"required"`
 	DayOfWeek int16  `json:"day_of_week"`

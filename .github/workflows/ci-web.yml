@@ -1,8 +1,12 @@
 name: ci-web
 
-# Skeleton — belum aktif penuh (lihat Task.md Phase 0 & Phase 2.6).
-# Deploy production/preview ditangani otomatis oleh integrasi Vercel <-> Git,
-# jadi workflow ini hanya menjaga kualitas kode (lint, type-check, test, build).
+# Deploy production/preview is handled automatically by the Vercel <->
+# Git integration once the Vercel project is linked to this repo (not yet
+# done — see Task.md Phase 0/2.6), so this workflow only guards code
+# quality (lint, type-check, unit test, e2e test, build).
+#
+# Uses npm (package-lock.json) — the Phase 0 skeleton assumed pnpm, but
+# the app was actually built with npm, so this was updated to match.
 
 on:
   pull_request:
@@ -25,27 +29,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
-          cache-dependency-path: apps/web/pnpm-lock.yaml
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Lint
-        run: pnpm lint
+        run: npm run lint
 
       - name: Type-check
-        run: pnpm exec tsc --noEmit
+        run: npx tsc -b --noEmit
 
       - name: Unit test
-        run: pnpm test
+        run: npx vitest run
 
       - name: Build
-        run: pnpm build
+        run: npm run build
+        env:
+          # Public, non-secret build-time values — a real deployment
+          # (Vercel) would inject its own; these just let the build/E2E
+          # step run in CI without needing repo secrets.
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder' }}
+          VITE_API_BASE_URL: "http://localhost:8080/api/v1"
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E test
+        run: npx playwright test
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder' }}
+          VITE_API_BASE_URL: "http://localhost:8080/api/v1"
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          retention-days: 7

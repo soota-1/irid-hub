@@ -12,6 +12,17 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const countAllAnnouncements = `-- name: CountAllAnnouncements :one
+SELECT count(*) FROM announcements WHERE community_id = $1
+`
+
+func (q *Queries) CountAllAnnouncements(ctx context.Context, communityID uuid.UUID) (int64, error) {
+	row := q.db.QueryRow(ctx, countAllAnnouncements, communityID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const countAnnouncements = `-- name: CountAnnouncements :one
 SELECT count(*) FROM announcements
 WHERE community_id = $1
@@ -103,6 +114,52 @@ func (q *Queries) GetAnnouncementByID(ctx context.Context, id uuid.UUID) (Announ
 		&i.UpdatedAt,
 	)
 	return i, err
+}
+
+const listAllAnnouncements = `-- name: ListAllAnnouncements :many
+SELECT id, community_id, title, content, urgency, visibility, published_at, created_by, created_at, updated_at FROM announcements
+WHERE community_id = $1
+ORDER BY created_at DESC
+LIMIT $3 OFFSET $2
+`
+
+type ListAllAnnouncementsParams struct {
+	CommunityID uuid.UUID
+	PageOffset  int32
+	PageLimit   int32
+}
+
+// Admin-only: unlike ListAnnouncements, includes drafts (published_at IS
+// NULL) and members_only entries regardless of caller — Task.md Phase 2.4.
+func (q *Queries) ListAllAnnouncements(ctx context.Context, arg ListAllAnnouncementsParams) ([]Announcement, error) {
+	rows, err := q.db.Query(ctx, listAllAnnouncements, arg.CommunityID, arg.PageOffset, arg.PageLimit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Announcement
+	for rows.Next() {
+		var i Announcement
+		if err := rows.Scan(
+			&i.ID,
+			&i.CommunityID,
+			&i.Title,
+			&i.Content,
+			&i.Urgency,
+			&i.Visibility,
+			&i.PublishedAt,
+			&i.CreatedBy,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listAnnouncements = `-- name: ListAnnouncements :many

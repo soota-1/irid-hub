@@ -77,10 +77,19 @@ type ListAnnouncementsParams struct {
 	PerPage        int
 }
 
+type ListAllAnnouncementsParams struct {
+	CommunityID uuid.UUID
+	Page        int
+	PerPage     int
+}
+
 type AnnouncementRepository interface {
 	Create(ctx context.Context, params CreateAnnouncementParams) (*Announcement, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*Announcement, error)
 	List(ctx context.Context, params ListAnnouncementsParams) ([]Announcement, int64, error)
+	// ListAll is admin-only: includes drafts and members_only entries
+	// regardless of published state — Task.md Phase 2.4.
+	ListAll(ctx context.Context, params ListAllAnnouncementsParams) ([]Announcement, int64, error)
 	Update(ctx context.Context, params UpdateAnnouncementParams) (*Announcement, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }

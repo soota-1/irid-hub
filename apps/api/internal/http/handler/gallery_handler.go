@@ -120,7 +120,7 @@ func (h *GalleryHandler) PresignUpload(c *gin.Context) {
 		handleServiceError(c, err)
 		return
 	}
-	response.OK(c, http.StatusOK, gin.H{"upload_url": result.UploadURL, "object_key": result.ObjectKey})
+	response.OK(c, http.StatusOK, gin.H{"upload_url": result.UploadURL, "object_key": result.ObjectKey, "public_url": result.PublicURL})
 }
 
 type createGalleryItemRequest struct {

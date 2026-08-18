@@ -127,6 +127,7 @@ type mockTrainingScheduleRepo struct {
 	create     func(ctx context.Context, params domain.CreateTrainingScheduleParams) (*domain.TrainingSchedule, error)
 	getByID    func(ctx context.Context, id uuid.UUID) (*domain.TrainingSchedule, error)
 	listActive func(ctx context.Context, communityID uuid.UUID) ([]domain.TrainingSchedule, error)
+	listAll    func(ctx context.Context, communityID uuid.UUID) ([]domain.TrainingSchedule, error)
 	update     func(ctx context.Context, params domain.UpdateTrainingScheduleParams) (*domain.TrainingSchedule, error)
 	delete     func(ctx context.Context, id uuid.UUID) error
 }
@@ -140,6 +141,9 @@ func (m *mockTrainingScheduleRepo) GetByID(ctx context.Context, id uuid.UUID) (*
 func (m *mockTrainingScheduleRepo) ListActive(ctx context.Context, communityID uuid.UUID) ([]domain.TrainingSchedule, error) {
 	return m.listActive(ctx, communityID)
 }
+func (m *mockTrainingScheduleRepo) ListAll(ctx context.Context, communityID uuid.UUID) ([]domain.TrainingSchedule, error) {
+	return m.listAll(ctx, communityID)
+}
 func (m *mockTrainingScheduleRepo) Update(ctx context.Context, params domain.UpdateTrainingScheduleParams) (*domain.TrainingSchedule, error) {
 	return m.update(ctx, params)
 }
@@ -151,8 +155,13 @@ type mockAnnouncementRepo struct {
 	create  func(ctx context.Context, params domain.CreateAnnouncementParams) (*domain.Announcement, error)
 	getByID func(ctx context.Context, id uuid.UUID) (*domain.Announcement, error)
 	list    func(ctx context.Context, params domain.ListAnnouncementsParams) ([]domain.Announcement, int64, error)
+	listAll func(ctx context.Context, params domain.ListAllAnnouncementsParams) ([]domain.Announcement, int64, error)
 	update  func(ctx context.Context, params domain.UpdateAnnouncementParams) (*domain.Announcement, error)
 	delete  func(ctx context.Context, id uuid.UUID) error
+}
+
+func (m *mockAnnouncementRepo) ListAll(ctx context.Context, params domain.ListAllAnnouncementsParams) ([]domain.Announcement, int64, error) {
+	return m.listAll(ctx, params)
 }
 
 func (m *mockAnnouncementRepo) Create(ctx context.Context, params domain.CreateAnnouncementParams) (*domain.Announcement, error) {

@@ -59,6 +59,20 @@ func Test_TrainingScheduleService_ListActive_ReturnsSchedules(t *testing.T) {
 	assert.Len(t, items, 1)
 }
 
+func Test_TrainingScheduleService_ListAll_IncludesInactive(t *testing.T) {
+	repo := &mockTrainingScheduleRepo{
+		listAll: func(ctx context.Context, communityID uuid.UUID) ([]domain.TrainingSchedule, error) {
+			return []domain.TrainingSchedule{{ID: uuid.New(), IsActive: false}}, nil
+		},
+	}
+	svc := NewTrainingScheduleService(repo)
+
+	items, err := svc.ListAll(context.Background(), uuid.New())
+
+	require.NoError(t, err)
+	assert.Len(t, items, 1)
+}
+
 func Test_TrainingScheduleService_Update_SavesChanges(t *testing.T) {
 	want := &domain.TrainingSchedule{ID: uuid.New(), Title: "Updated"}
 	repo := &mockTrainingScheduleRepo{
