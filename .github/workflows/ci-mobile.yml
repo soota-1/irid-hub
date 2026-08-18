@@ -1,0 +1,42 @@
+name: ci-mobile
+
+# Skeleton — belum aktif penuh (lihat Task.md Phase 0 & Phase 3).
+# Rilis ke Play Console/TestFlight ditangani workflow terpisah
+# (release-mobile.yml, Fastlane) — dipicu manual/tag `mobile-v*`, bukan di sini.
+
+on:
+  pull_request:
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/ci-mobile.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/ci-mobile.yml"
+
+defaults:
+  run:
+    working-directory: apps/mobile
+
+jobs:
+  analyze-test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build debug APK (smoke test)
+        run: flutter build apk --debug

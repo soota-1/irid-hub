@@ -1,0 +1,32 @@
+# Docs — tidak di-track di git (permintaan user)
+*.md
+docs/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Node / web
+node_modules/
+apps/web/dist/
+apps/web/.vite/
+
+# Go / api
+apps/api/tmp/
+apps/api/*.exe
+apps/api/coverage.out
+
+# Flutter / mobile
+apps/mobile/.dart_tool/
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/build/
+apps/mobile/**/ios/Pods/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
