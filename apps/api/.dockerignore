@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+tmp/
+*.exe
+coverage.out
+docs/
+migrations/
