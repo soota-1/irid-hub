@@ -17,6 +17,9 @@ func NewHealthHandler(pool *pgxpool.Pool) *HealthHandler {
 	return &HealthHandler{pool: pool}
 }
 
+// Check reports database connectivity for infra probes. Not part of the
+// /api/v1 OpenAPI contract (it lives outside @BasePath), so it is
+// intentionally left undocumented in the generated spec.
 func (h *HealthHandler) Check(c *gin.Context) {
 	if err := db.HealthCheck(c.Request.Context(), h.pool); err != nil {
 		response.Error(c, http.StatusServiceUnavailable, response.ErrInternal, "Database tidak terhubung")

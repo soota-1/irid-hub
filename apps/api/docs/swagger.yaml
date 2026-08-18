@@ -1,0 +1,1376 @@
+basePath: /api/v1
+definitions:
+  handler.achievementDTO:
+    properties:
+      achieved_at:
+        type: string
+      community_id:
+        type: string
+      description:
+        type: string
+      icon_or_badge_url:
+        type: string
+      id:
+        type: string
+      member_id:
+        type: string
+      title:
+        type: string
+    type: object
+  handler.announcementDTO:
+    properties:
+      community_id:
+        type: string
+      content:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      id:
+        type: string
+      published_at:
+        type: string
+      title:
+        type: string
+      urgency:
+        type: string
+      visibility:
+        type: string
+    type: object
+  handler.communityDTO:
+    properties:
+      cover_image_url:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      logo_url:
+        type: string
+      name:
+        type: string
+      primary_color:
+        type: string
+      slug:
+        type: string
+      tagline:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  handler.createGalleryItemRequest:
+    properties:
+      caption:
+        type: string
+      event_id:
+        type: string
+      media_url:
+        type: string
+      thumbnail_url:
+        type: string
+      type:
+        type: string
+    required:
+    - media_url
+    - type
+    type: object
+  handler.eventDTO:
+    properties:
+      category:
+        type: string
+      community_id:
+        type: string
+      cover_image_url:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      description:
+        type: string
+      end_at:
+        type: string
+      id:
+        type: string
+      is_public:
+        type: boolean
+      location:
+        type: string
+      start_at:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  handler.galleryItemDTO:
+    properties:
+      caption:
+        type: string
+      community_id:
+        type: string
+      created_at:
+        type: string
+      event_id:
+        type: string
+      id:
+        type: string
+      media_url:
+        type: string
+      thumbnail_url:
+        type: string
+      type:
+        type: string
+      uploaded_by:
+        type: string
+    type: object
+  handler.membershipApplicationDTO:
+    properties:
+      community_id:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      motivation:
+        type: string
+      phone:
+        type: string
+      reviewed_at:
+        type: string
+      reviewed_by:
+        type: string
+      status:
+        type: string
+    type: object
+  handler.membershipDTO:
+    properties:
+      bio:
+        type: string
+      community_id:
+        type: string
+      id:
+        type: string
+      joined_at:
+        type: string
+      role:
+        type: string
+      status:
+        type: string
+      user_id:
+        type: string
+    type: object
+  handler.presignUploadRequest:
+    properties:
+      content_type:
+        type: string
+      size_bytes:
+        type: integer
+    required:
+    - content_type
+    - size_bytes
+    type: object
+  handler.rsvpRequest:
+    properties:
+      status:
+        type: string
+    required:
+    - status
+    type: object
+  handler.submitMembershipApplicationRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      motivation:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - full_name
+    - phone
+    type: object
+  handler.trainingScheduleDTO:
+    properties:
+      community_id:
+        type: string
+      day_of_week:
+        type: integer
+      end_time:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      location:
+        type: string
+      start_time:
+        type: string
+      title:
+        type: string
+    type: object
+  handler.updateMembershipRoleRequest:
+    properties:
+      role:
+        type: string
+    required:
+    - role
+    type: object
+  handler.upsertAchievementRequest:
+    properties:
+      achieved_at:
+        type: string
+      description:
+        type: string
+      icon_or_badge_url:
+        type: string
+      member_id:
+        type: string
+      title:
+        type: string
+    required:
+    - achieved_at
+    - title
+    type: object
+  handler.upsertAnnouncementRequest:
+    properties:
+      content:
+        type: string
+      published_at:
+        type: string
+      title:
+        type: string
+      urgency:
+        type: string
+      visibility:
+        type: string
+    required:
+    - content
+    - title
+    - urgency
+    - visibility
+    type: object
+  handler.upsertEventRequest:
+    properties:
+      category:
+        type: string
+      cover_image_url:
+        type: string
+      description:
+        type: string
+      end_at:
+        type: string
+      is_public:
+        type: boolean
+      location:
+        type: string
+      start_at:
+        type: string
+      title:
+        type: string
+    required:
+    - category
+    - end_at
+    - start_at
+    - title
+    type: object
+  handler.upsertTrainingScheduleRequest:
+    properties:
+      day_of_week:
+        type: integer
+      end_time:
+        type: string
+      is_active:
+        type: boolean
+      location:
+        type: string
+      start_time:
+        type: string
+      title:
+        type: string
+    required:
+    - end_time
+    - start_time
+    - title
+    type: object
+  handler.userDTO:
+    properties:
+      avatar_url:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      phone:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  response.Envelope:
+    properties:
+      data: {}
+      error:
+        $ref: '#/definitions/response.ErrorBody'
+      meta:
+        $ref: '#/definitions/response.Meta'
+      success:
+        type: boolean
+    type: object
+  response.ErrorBody:
+    properties:
+      code:
+        $ref: '#/definitions/response.ErrorCode'
+      fields:
+        additionalProperties:
+          type: string
+        type: object
+      message:
+        type: string
+    type: object
+  response.ErrorCode:
+    enum:
+    - VALIDATION_ERROR
+    - UNAUTHORIZED
+    - FORBIDDEN
+    - NOT_FOUND
+    - CONFLICT
+    - RATE_LIMITED
+    - INTERNAL_ERROR
+    type: string
+    x-enum-varnames:
+    - ErrValidation
+    - ErrUnauthorized
+    - ErrForbidden
+    - ErrNotFound
+    - ErrConflict
+    - ErrRateLimited
+    - ErrInternal
+  response.Meta:
+    properties:
+      page:
+        type: integer
+      per_page:
+        type: integer
+      total:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: Backend API for the Iridescent community hub (events, memberships,
+    announcements, gallery, achievements).
+  title: Iridescent Hub API
+  version: "1.0"
+paths:
+  /achievements:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.achievementDTO'
+                  type: array
+              type: object
+      summary: List achievements
+      tags:
+      - achievements
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Achievement
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertAchievementRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.achievementDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Create an achievement
+      tags:
+      - achievements
+  /achievements/{id}:
+    delete:
+      parameters:
+      - description: Achievement ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Delete an achievement
+      tags:
+      - achievements
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Achievement ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Achievement
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertAchievementRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.achievementDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Update an achievement
+      tags:
+      - achievements
+  /admin/dashboard/summary:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Envelope'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Admin dashboard summary
+      tags:
+      - admin
+  /announcements:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.announcementDTO'
+                  type: array
+              type: object
+      summary: List public announcements
+      tags:
+      - announcements
+    post:
+      consumes:
+      - application/json
+      description: Omit published_at (or send null) to save as a draft.
+      parameters:
+      - description: Announcement
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertAnnouncementRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.announcementDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Create an announcement
+      tags:
+      - announcements
+  /announcements/{id}:
+    delete:
+      parameters:
+      - description: Announcement ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Delete an announcement
+      tags:
+      - announcements
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Announcement ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Announcement
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertAnnouncementRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.announcementDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Update an announcement
+      tags:
+      - announcements
+  /announcements/internal:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.announcementDTO'
+                  type: array
+              type: object
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: List announcements including members-only ones
+      tags:
+      - announcements
+  /community:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.communityDTO'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      summary: Get the current community
+      tags:
+      - community
+  /events:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      - description: Filter start_at >= (RFC3339)
+        in: query
+        name: from
+        type: string
+      - description: Filter start_at <= (RFC3339)
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.eventDTO'
+                  type: array
+              type: object
+      summary: List public events
+      tags:
+      - events
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertEventRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.eventDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Create an event
+      tags:
+      - events
+  /events/{id}:
+    delete:
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Delete an event (soft delete)
+      tags:
+      - events
+    get:
+      description: Private events are hidden from anonymous callers (returned as 404).
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.eventDTO'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      summary: Get a public event
+      tags:
+      - events
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Event
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.eventDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Update an event
+      tags:
+      - events
+  /events/{id}/rsvp:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: RSVP status
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.rsvpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Envelope'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: RSVP to an event
+      tags:
+      - events
+  /gallery:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      - description: Filter by event ID
+        in: query
+        name: event_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.galleryItemDTO'
+                  type: array
+              type: object
+      summary: List gallery items
+      tags:
+      - gallery
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Gallery item
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createGalleryItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.galleryItemDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Save gallery item metadata after a successful upload
+      tags:
+      - gallery
+  /gallery/{id}:
+    delete:
+      parameters:
+      - description: Gallery item ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Delete a gallery item
+      tags:
+      - gallery
+  /gallery/presigned-url:
+    post:
+      consumes:
+      - application/json
+      description: Validates content type and size before issuing a short-lived presigned
+        PUT URL.
+      parameters:
+      - description: Upload metadata
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.presignUploadRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Envelope'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Request a presigned R2 upload URL
+      tags:
+      - gallery
+  /members:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      - description: Filter by role
+        enum:
+        - member
+        - officer
+        - admin
+        in: query
+        name: role
+        type: string
+      - description: Filter by status
+        enum:
+        - active
+        - inactive
+        - banned
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.membershipDTO'
+                  type: array
+              type: object
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: List members
+      tags:
+      - members
+  /members/{id}/role:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Membership ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: New role
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateMembershipRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.membershipDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Change a member's role
+      tags:
+      - members
+  /membership-applications:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      - description: Filter by status
+        enum:
+        - pending
+        - approved
+        - rejected
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.membershipApplicationDTO'
+                  type: array
+              type: object
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: List membership applications
+      tags:
+      - membership-applications
+    post:
+      consumes:
+      - application/json
+      description: Public, rate-limited endpoint for the "join us" form.
+      parameters:
+      - description: Application
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.submitMembershipApplicationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.membershipApplicationDTO'
+              type: object
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.Envelope'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+        "429":
+          description: Too Many Requests
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      summary: Submit a membership application
+      tags:
+      - membership-applications
+  /membership-applications/{id}/approve:
+    patch:
+      description: Auto-creates the membership if the applicant already has a synced
+        user; otherwise deferred until they sign up.
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.membershipApplicationDTO'
+              type: object
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Approve a membership application
+      tags:
+      - membership-applications
+  /membership-applications/{id}/reject:
+    patch:
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.membershipApplicationDTO'
+              type: object
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Reject a membership application
+      tags:
+      - membership-applications
+  /schedules:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.trainingScheduleDTO'
+                  type: array
+              type: object
+      summary: List active training schedules
+      tags:
+      - schedules
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Schedule
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertTrainingScheduleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.trainingScheduleDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Create a training schedule
+      tags:
+      - schedules
+  /schedules/{id}:
+    delete:
+      parameters:
+      - description: Schedule ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Delete a training schedule
+      tags:
+      - schedules
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Schedule ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Schedule
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.upsertTrainingScheduleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.trainingScheduleDTO'
+              type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Update a training schedule
+      tags:
+      - schedules
+  /users/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.userDTO'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      security:
+      - BearerAuth: []
+      summary: Get the authenticated user's profile
+      tags:
+      - users
+  /webhooks/clerk:
+    post:
+      consumes:
+      - application/json
+      description: Public but signature-verified (Svix headers). Upserts the local
+        user row — see docs/Schema.md §2.2.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Envelope'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.userDTO'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Envelope'
+      summary: Clerk user.created/user.updated webhook
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    description: Clerk session JWT, sent as "Bearer <token>".
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

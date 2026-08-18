@@ -61,7 +61,18 @@ type submitMembershipApplicationRequest struct {
 	Motivation string `json:"motivation"`
 }
 
-// Submit handles POST /api/v1/membership-applications (public, rate-limited).
+// Submit godoc
+// @Summary      Submit a membership application
+// @Description  Public, rate-limited endpoint for the "join us" form.
+// @Tags         membership-applications
+// @Accept       json
+// @Produce      json
+// @Param        body  body      submitMembershipApplicationRequest  true  "Application"
+// @Success      201  {object}  response.Envelope{data=membershipApplicationDTO}
+// @Failure      422  {object}  response.Envelope
+// @Failure      409  {object}  response.Envelope
+// @Failure      429  {object}  response.Envelope
+// @Router       /membership-applications [post]
 func (h *MembershipApplicationHandler) Submit(c *gin.Context) {
 	var req submitMembershipApplicationRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -94,7 +105,17 @@ func (h *MembershipApplicationHandler) Submit(c *gin.Context) {
 	response.OK(c, http.StatusCreated, toMembershipApplicationDTO(app))
 }
 
-// List handles GET /api/v1/membership-applications (admin).
+// List godoc
+// @Summary   List membership applications
+// @Tags      membership-applications
+// @Produce   json
+// @Security  BearerAuth
+// @Param     page      query     int     false  "Page number"     default(1)
+// @Param     per_page  query     int     false  "Items per page"  default(20)
+// @Param     status    query     string  false  "Filter by status"  Enums(pending, approved, rejected)
+// @Success   200  {object}  response.Envelope{data=[]membershipApplicationDTO}
+// @Failure   403  {object}  response.Envelope
+// @Router    /membership-applications [get]
 func (h *MembershipApplicationHandler) List(c *gin.Context) {
 	community, err := h.communityRepo.GetCurrent(c.Request.Context())
 	if err != nil {
@@ -122,7 +143,16 @@ func (h *MembershipApplicationHandler) List(c *gin.Context) {
 	response.OKPaginated(c, dtos, response.Meta{Page: page, PerPage: perPage, Total: total})
 }
 
-// Approve handles PATCH /api/v1/membership-applications/:id/approve (admin).
+// Approve godoc
+// @Summary      Approve a membership application
+// @Description  Auto-creates the membership if the applicant already has a synced user; otherwise deferred until they sign up.
+// @Tags         membership-applications
+// @Produce      json
+// @Security     BearerAuth
+// @Param        id  path      string  true  "Application ID"
+// @Success      200  {object}  response.Envelope{data=membershipApplicationDTO}
+// @Failure      409  {object}  response.Envelope
+// @Router       /membership-applications/{id}/approve [patch]
 func (h *MembershipApplicationHandler) Approve(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -139,7 +169,15 @@ func (h *MembershipApplicationHandler) Approve(c *gin.Context) {
 	response.OK(c, http.StatusOK, toMembershipApplicationDTO(app))
 }
 
-// Reject handles PATCH /api/v1/membership-applications/:id/reject (admin).
+// Reject godoc
+// @Summary   Reject a membership application
+// @Tags      membership-applications
+// @Produce   json
+// @Security  BearerAuth
+// @Param     id  path      string  true  "Application ID"
+// @Success   200  {object}  response.Envelope{data=membershipApplicationDTO}
+// @Failure   409  {object}  response.Envelope
+// @Router    /membership-applications/{id}/reject [patch]
 func (h *MembershipApplicationHandler) Reject(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

@@ -46,7 +46,13 @@ func toCommunityDTO(c *domain.Community) communityDTO {
 	}
 }
 
-// GetCurrent handles GET /api/v1/community (public).
+// GetCurrent godoc
+// @Summary  Get the current community
+// @Tags     community
+// @Produce  json
+// @Success  200  {object}  response.Envelope{data=communityDTO}
+// @Failure  404  {object}  response.Envelope
+// @Router   /community [get]
 func (h *CommunityHandler) GetCurrent(c *gin.Context) {
 	community, err := h.svc.GetCurrent(c.Request.Context())
 	if err != nil {

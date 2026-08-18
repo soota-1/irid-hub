@@ -43,7 +43,12 @@ func toTrainingScheduleDTO(t *domain.TrainingSchedule) trainingScheduleDTO {
 	}
 }
 
-// List handles GET /api/v1/schedules (publik, hanya is_active=true).
+// List godoc
+// @Summary  List active training schedules
+// @Tags     schedules
+// @Produce  json
+// @Success  200  {object}  response.Envelope{data=[]trainingScheduleDTO}
+// @Router   /schedules [get]
 func (h *TrainingScheduleHandler) List(c *gin.Context) {
 	community, err := h.communityRepo.GetCurrent(c.Request.Context())
 	if err != nil {
@@ -71,7 +76,16 @@ type upsertTrainingScheduleRequest struct {
 	IsActive  bool   `json:"is_active"`
 }
 
-// Create handles POST /api/v1/schedules (admin).
+// Create godoc
+// @Summary   Create a training schedule
+// @Tags      schedules
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     body  body      upsertTrainingScheduleRequest  true  "Schedule"
+// @Success   201  {object}  response.Envelope{data=trainingScheduleDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /schedules [post]
 func (h *TrainingScheduleHandler) Create(c *gin.Context) {
 	var req upsertTrainingScheduleRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -100,7 +114,17 @@ func (h *TrainingScheduleHandler) Create(c *gin.Context) {
 	response.OK(c, http.StatusCreated, toTrainingScheduleDTO(sc))
 }
 
-// Update handles PATCH /api/v1/schedules/:id (admin).
+// Update godoc
+// @Summary   Update a training schedule
+// @Tags      schedules
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     id    path      string                          true  "Schedule ID"
+// @Param     body  body      upsertTrainingScheduleRequest  true  "Schedule"
+// @Success   200  {object}  response.Envelope{data=trainingScheduleDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /schedules/{id} [patch]
 func (h *TrainingScheduleHandler) Update(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -129,7 +153,14 @@ func (h *TrainingScheduleHandler) Update(c *gin.Context) {
 	response.OK(c, http.StatusOK, toTrainingScheduleDTO(sc))
 }
 
-// Delete handles DELETE /api/v1/schedules/:id (admin).
+// Delete godoc
+// @Summary   Delete a training schedule
+// @Tags      schedules
+// @Security  BearerAuth
+// @Param     id  path  string  true  "Schedule ID"
+// @Success   204  "No Content"
+// @Failure   404  {object}  response.Envelope
+// @Router    /schedules/{id} [delete]
 func (h *TrainingScheduleHandler) Delete(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

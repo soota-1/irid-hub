@@ -1,6 +1,8 @@
 # Docs — tidak di-track di git (permintaan user)
+# Anchored to repo root so this doesn't also catch apps/api/docs/ (generated
+# OpenAPI spec, which we DO want tracked).
 *.md
-docs/
+/docs/
 
 # Env / secrets
 .env
@@ -30,3 +32,4 @@ apps/mobile/**/ios/Pods/
 .idea/
 .DS_Store
 Thumbs.db
+.claude/

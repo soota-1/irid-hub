@@ -56,7 +56,16 @@ func toEventDTO(e *domain.Event) eventDTO {
 	}
 }
 
-// List handles GET /api/v1/events (public, paginated, filter rentang tanggal).
+// List godoc
+// @Summary  List public events
+// @Tags     events
+// @Produce  json
+// @Param    page      query     int     false  "Page number"     default(1)
+// @Param    per_page  query     int     false  "Items per page"  default(20)
+// @Param    from      query     string  false  "Filter start_at >= (RFC3339)"
+// @Param    to        query     string  false  "Filter start_at <= (RFC3339)"
+// @Success  200  {object}  response.Envelope{data=[]eventDTO}
+// @Router   /events [get]
 func (h *EventHandler) List(c *gin.Context) {
 	community, err := h.communityRepo.GetCurrent(c.Request.Context())
 	if err != nil {
@@ -90,7 +99,15 @@ func (h *EventHandler) List(c *gin.Context) {
 	response.OKPaginated(c, dtos, response.Meta{Page: page, PerPage: perPage, Total: total})
 }
 
-// GetByID handles GET /api/v1/events/:id (public).
+// GetByID godoc
+// @Summary      Get a public event
+// @Description  Private events are hidden from anonymous callers (returned as 404).
+// @Tags         events
+// @Produce      json
+// @Param        id  path      string  true  "Event ID"
+// @Success      200  {object}  response.Envelope{data=eventDTO}
+// @Failure      404  {object}  response.Envelope
+// @Router       /events/{id} [get]
 func (h *EventHandler) GetByID(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -123,7 +140,16 @@ func strPtr(s string) *string {
 	return &s
 }
 
-// Create handles POST /api/v1/events (admin).
+// Create godoc
+// @Summary   Create an event
+// @Tags      events
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     body  body      upsertEventRequest  true  "Event"
+// @Success   201  {object}  response.Envelope{data=eventDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /events [post]
 func (h *EventHandler) Create(c *gin.Context) {
 	var req upsertEventRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -157,7 +183,17 @@ func (h *EventHandler) Create(c *gin.Context) {
 	response.OK(c, http.StatusCreated, toEventDTO(e))
 }
 
-// Update handles PATCH /api/v1/events/:id (admin).
+// Update godoc
+// @Summary   Update an event
+// @Tags      events
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     id    path      string               true  "Event ID"
+// @Param     body  body      upsertEventRequest   true  "Event"
+// @Success   200  {object}  response.Envelope{data=eventDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /events/{id} [patch]
 func (h *EventHandler) Update(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -188,7 +224,14 @@ func (h *EventHandler) Update(c *gin.Context) {
 	response.OK(c, http.StatusOK, toEventDTO(e))
 }
 
-// Delete handles DELETE /api/v1/events/:id (admin, soft delete).
+// Delete godoc
+// @Summary   Delete an event (soft delete)
+// @Tags      events
+// @Security  BearerAuth
+// @Param     id  path  string  true  "Event ID"
+// @Success   204  "No Content"
+// @Failure   404  {object}  response.Envelope
+// @Router    /events/{id} [delete]
 func (h *EventHandler) Delete(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -206,7 +249,17 @@ type rsvpRequest struct {
 	Status string `json:"status" binding:"required"`
 }
 
-// Rsvp handles POST /api/v1/events/:id/rsvp (member, upsert).
+// Rsvp godoc
+// @Summary   RSVP to an event
+// @Tags      events
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     id    path      string       true  "Event ID"
+// @Param     body  body      rsvpRequest  true  "RSVP status"
+// @Success   200  {object}  response.Envelope
+// @Failure   401  {object}  response.Envelope
+// @Router    /events/{id}/rsvp [post]
 func (h *EventHandler) Rsvp(c *gin.Context) {
 	eventID, err := uuid.Parse(c.Param("id"))
 	if err != nil {

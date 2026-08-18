@@ -1,0 +1,2548 @@
+{
+  "components": {
+    "schemas": {
+      "handler.achievementDTO": {
+        "properties": {
+          "achieved_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "community_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "icon_or_badge_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "member_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.announcementDTO": {
+        "properties": {
+          "community_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "content": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_by": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "published_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "nullable": true,
+            "type": "string"
+          },
+          "urgency": {
+            "nullable": true,
+            "type": "string"
+          },
+          "visibility": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.communityDTO": {
+        "properties": {
+          "cover_image_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "logo_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "primary_color": {
+            "nullable": true,
+            "type": "string"
+          },
+          "slug": {
+            "nullable": true,
+            "type": "string"
+          },
+          "tagline": {
+            "nullable": true,
+            "type": "string"
+          },
+          "updated_at": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.createGalleryItemRequest": {
+        "properties": {
+          "caption": {
+            "nullable": true,
+            "type": "string"
+          },
+          "event_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "media_url": {
+            "type": "string"
+          },
+          "thumbnail_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "media_url",
+          "type"
+        ],
+        "type": "object"
+      },
+      "handler.eventDTO": {
+        "properties": {
+          "category": {
+            "nullable": true,
+            "type": "string"
+          },
+          "community_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "cover_image_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_by": {
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "end_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "is_public": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "location": {
+            "nullable": true,
+            "type": "string"
+          },
+          "start_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "nullable": true,
+            "type": "string"
+          },
+          "updated_at": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.galleryItemDTO": {
+        "properties": {
+          "caption": {
+            "nullable": true,
+            "type": "string"
+          },
+          "community_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "event_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "media_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "thumbnail_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "type": {
+            "nullable": true,
+            "type": "string"
+          },
+          "uploaded_by": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.membershipApplicationDTO": {
+        "properties": {
+          "community_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "nullable": true,
+            "type": "string"
+          },
+          "full_name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "motivation": {
+            "nullable": true,
+            "type": "string"
+          },
+          "phone": {
+            "nullable": true,
+            "type": "string"
+          },
+          "reviewed_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "reviewed_by": {
+            "nullable": true,
+            "type": "string"
+          },
+          "status": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.membershipDTO": {
+        "properties": {
+          "bio": {
+            "nullable": true,
+            "type": "string"
+          },
+          "community_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "joined_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "role": {
+            "nullable": true,
+            "type": "string"
+          },
+          "status": {
+            "nullable": true,
+            "type": "string"
+          },
+          "user_id": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.presignUploadRequest": {
+        "properties": {
+          "content_type": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "content_type",
+          "size_bytes"
+        ],
+        "type": "object"
+      },
+      "handler.rsvpRequest": {
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "handler.submitMembershipApplicationRequest": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "motivation": {
+            "nullable": true,
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "full_name",
+          "phone"
+        ],
+        "type": "object"
+      },
+      "handler.trainingScheduleDTO": {
+        "properties": {
+          "community_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "day_of_week": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "end_time": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "is_active": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "location": {
+            "nullable": true,
+            "type": "string"
+          },
+          "start_time": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "handler.updateMembershipRoleRequest": {
+        "properties": {
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role"
+        ],
+        "type": "object"
+      },
+      "handler.upsertAchievementRequest": {
+        "properties": {
+          "achieved_at": {
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "icon_or_badge_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "member_id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "achieved_at",
+          "title"
+        ],
+        "type": "object"
+      },
+      "handler.upsertAnnouncementRequest": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "published_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "urgency": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "title",
+          "urgency",
+          "visibility"
+        ],
+        "type": "object"
+      },
+      "handler.upsertEventRequest": {
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "cover_image_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "end_at": {
+            "type": "string"
+          },
+          "is_public": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "location": {
+            "nullable": true,
+            "type": "string"
+          },
+          "start_at": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "category",
+          "end_at",
+          "start_at",
+          "title"
+        ],
+        "type": "object"
+      },
+      "handler.upsertTrainingScheduleRequest": {
+        "properties": {
+          "day_of_week": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "end_time": {
+            "type": "string"
+          },
+          "is_active": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "location": {
+            "nullable": true,
+            "type": "string"
+          },
+          "start_time": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "end_time",
+          "start_time",
+          "title"
+        ],
+        "type": "object"
+      },
+      "handler.userDTO": {
+        "properties": {
+          "avatar_url": {
+            "nullable": true,
+            "type": "string"
+          },
+          "created_at": {
+            "nullable": true,
+            "type": "string"
+          },
+          "email": {
+            "nullable": true,
+            "type": "string"
+          },
+          "full_name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "nullable": true,
+            "type": "string"
+          },
+          "phone": {
+            "nullable": true,
+            "type": "string"
+          },
+          "updated_at": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "response.Envelope": {
+        "properties": {
+          "data": {
+            "nullable": true
+          },
+          "error": {
+            "$ref": "#/components/schemas/response.ErrorBody"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/response.Meta"
+          },
+          "success": {
+            "nullable": true,
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "response.ErrorBody": {
+        "nullable": true,
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/response.ErrorCode"
+          },
+          "fields": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "type": "object"
+          },
+          "message": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "response.ErrorCode": {
+        "enum": [
+          "VALIDATION_ERROR",
+          "UNAUTHORIZED",
+          "FORBIDDEN",
+          "NOT_FOUND",
+          "CONFLICT",
+          "RATE_LIMITED",
+          "INTERNAL_ERROR"
+        ],
+        "nullable": true,
+        "type": "string",
+        "x-enum-varnames": [
+          "ErrValidation",
+          "ErrUnauthorized",
+          "ErrForbidden",
+          "ErrNotFound",
+          "ErrConflict",
+          "ErrRateLimited",
+          "ErrInternal"
+        ]
+      },
+      "response.Meta": {
+        "nullable": true,
+        "properties": {
+          "page": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "per_page": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "total": {
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "description": "Clerk session JWT, sent as \"Bearer \u003ctoken\u003e\".",
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "contact": {},
+    "description": "Backend API for the Iridescent community hub (events, memberships, announcements, gallery, achievements).",
+    "title": "Iridescent Hub API",
+    "version": "1.0"
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/achievements": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.achievementDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "List achievements",
+        "tags": [
+          "achievements"
+        ]
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertAchievementRequest"
+              }
+            }
+          },
+          "description": "Achievement",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.achievementDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create an achievement",
+        "tags": [
+          "achievements"
+        ]
+      }
+    },
+    "/achievements/{id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "Achievement ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete an achievement",
+        "tags": [
+          "achievements"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "Achievement ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertAchievementRequest"
+              }
+            }
+          },
+          "description": "Achievement",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.achievementDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update an achievement",
+        "tags": [
+          "achievements"
+        ]
+      }
+    },
+    "/admin/dashboard/summary": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Admin dashboard summary",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/announcements": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.announcementDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "List public announcements",
+        "tags": [
+          "announcements"
+        ]
+      },
+      "post": {
+        "description": "Omit published_at (or send null) to save as a draft.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertAnnouncementRequest"
+              }
+            }
+          },
+          "description": "Announcement",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.announcementDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create an announcement",
+        "tags": [
+          "announcements"
+        ]
+      }
+    },
+    "/announcements/internal": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.announcementDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "List announcements including members-only ones",
+        "tags": [
+          "announcements"
+        ]
+      }
+    },
+    "/announcements/{id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "Announcement ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete an announcement",
+        "tags": [
+          "announcements"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "Announcement ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertAnnouncementRequest"
+              }
+            }
+          },
+          "description": "Announcement",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.announcementDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update an announcement",
+        "tags": [
+          "announcements"
+        ]
+      }
+    },
+    "/community": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.communityDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "summary": "Get the current community",
+        "tags": [
+          "community"
+        ]
+      }
+    },
+    "/events": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter start_at \u003e= (RFC3339)",
+            "in": "query",
+            "name": "from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter start_at \u003c= (RFC3339)",
+            "in": "query",
+            "name": "to",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.eventDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "List public events",
+        "tags": [
+          "events"
+        ]
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertEventRequest"
+              }
+            }
+          },
+          "description": "Event",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.eventDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create an event",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/events/{id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "Event ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete an event (soft delete)",
+        "tags": [
+          "events"
+        ]
+      },
+      "get": {
+        "description": "Private events are hidden from anonymous callers (returned as 404).",
+        "parameters": [
+          {
+            "description": "Event ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.eventDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "summary": "Get a public event",
+        "tags": [
+          "events"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "Event ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertEventRequest"
+              }
+            }
+          },
+          "description": "Event",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.eventDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update an event",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/events/{id}/rsvp": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Event ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.rsvpRequest"
+              }
+            }
+          },
+          "description": "RSVP status",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "RSVP to an event",
+        "tags": [
+          "events"
+        ]
+      }
+    },
+    "/gallery": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter by event ID",
+            "in": "query",
+            "name": "event_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.galleryItemDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "List gallery items",
+        "tags": [
+          "gallery"
+        ]
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.createGalleryItemRequest"
+              }
+            }
+          },
+          "description": "Gallery item",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.galleryItemDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Save gallery item metadata after a successful upload",
+        "tags": [
+          "gallery"
+        ]
+      }
+    },
+    "/gallery/presigned-url": {
+      "post": {
+        "description": "Validates content type and size before issuing a short-lived presigned PUT URL.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.presignUploadRequest"
+              }
+            }
+          },
+          "description": "Upload metadata",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Request a presigned R2 upload URL",
+        "tags": [
+          "gallery"
+        ]
+      }
+    },
+    "/gallery/{id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "Gallery item ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete a gallery item",
+        "tags": [
+          "gallery"
+        ]
+      }
+    },
+    "/members": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter by role",
+            "in": "query",
+            "name": "role",
+            "schema": {
+              "enum": [
+                "member",
+                "officer",
+                "admin"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter by status",
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "enum": [
+                "active",
+                "inactive",
+                "banned"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.membershipDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "List members",
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/members/{id}/role": {
+      "patch": {
+        "parameters": [
+          {
+            "description": "Membership ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.updateMembershipRoleRequest"
+              }
+            }
+          },
+          "description": "New role",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.membershipDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Change a member's role",
+        "tags": [
+          "members"
+        ]
+      }
+    },
+    "/membership-applications": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "per_page",
+            "schema": {
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter by status",
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "enum": [
+                "pending",
+                "approved",
+                "rejected"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.membershipApplicationDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "List membership applications",
+        "tags": [
+          "membership-applications"
+        ]
+      },
+      "post": {
+        "description": "Public, rate-limited endpoint for the \"join us\" form.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.submitMembershipApplicationRequest"
+              }
+            }
+          },
+          "description": "Application",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.membershipApplicationDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Submit a membership application",
+        "tags": [
+          "membership-applications"
+        ]
+      }
+    },
+    "/membership-applications/{id}/approve": {
+      "patch": {
+        "description": "Auto-creates the membership if the applicant already has a synced user; otherwise deferred until they sign up.",
+        "parameters": [
+          {
+            "description": "Application ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.membershipApplicationDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Approve a membership application",
+        "tags": [
+          "membership-applications"
+        ]
+      }
+    },
+    "/membership-applications/{id}/reject": {
+      "patch": {
+        "parameters": [
+          {
+            "description": "Application ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.membershipApplicationDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Reject a membership application",
+        "tags": [
+          "membership-applications"
+        ]
+      }
+    },
+    "/schedules": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/handler.trainingScheduleDTO"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "List active training schedules",
+        "tags": [
+          "schedules"
+        ]
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertTrainingScheduleRequest"
+              }
+            }
+          },
+          "description": "Schedule",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.trainingScheduleDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Create a training schedule",
+        "tags": [
+          "schedules"
+        ]
+      }
+    },
+    "/schedules/{id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "Schedule ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Delete a training schedule",
+        "tags": [
+          "schedules"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "Schedule ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/handler.upsertTrainingScheduleRequest"
+              }
+            }
+          },
+          "description": "Schedule",
+          "required": true,
+          "x-originalParamName": "body"
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.trainingScheduleDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update a training schedule",
+        "tags": [
+          "schedules"
+        ]
+      }
+    },
+    "/users/me": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.userDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get the authenticated user's profile",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/webhooks/clerk": {
+      "post": {
+        "description": "Public but signature-verified (Svix headers). Upserts the local user row — see docs/Schema.md §2.2.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/response.Envelope"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/handler.userDTO"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response.Envelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Clerk user.created/user.updated webhook",
+        "tags": [
+          "users"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ]
+}

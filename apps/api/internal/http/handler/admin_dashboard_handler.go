@@ -18,7 +18,14 @@ func NewAdminDashboardHandler(svc *service.AdminDashboardService, communityRepo 
 	return &AdminDashboardHandler{svc: svc, communityRepo: communityRepo}
 }
 
-// GetSummary handles GET /api/v1/admin/dashboard/summary (admin).
+// GetSummary godoc
+// @Summary   Admin dashboard summary
+// @Tags      admin
+// @Produce   json
+// @Security  BearerAuth
+// @Success   200  {object}  response.Envelope
+// @Failure   403  {object}  response.Envelope
+// @Router    /admin/dashboard/summary [get]
 func (h *AdminDashboardHandler) GetSummary(c *gin.Context) {
 	community, err := h.communityRepo.GetCurrent(c.Request.Context())
 	if err != nil {

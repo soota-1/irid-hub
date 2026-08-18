@@ -1,3 +1,14 @@
+// Package main is the Iridescent Hub API entrypoint.
+//
+// @title           Iridescent Hub API
+// @version         1.0
+// @description     Backend API for the Iridescent community hub (events, memberships, announcements, gallery, achievements).
+// @BasePath        /api/v1
+//
+// @securityDefinitions.apikey  BearerAuth
+// @in                          header
+// @name                        Authorization
+// @description                 Clerk session JWT, sent as "Bearer <token>".
 package main
 
 import (

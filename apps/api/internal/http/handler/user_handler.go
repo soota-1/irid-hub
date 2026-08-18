@@ -46,7 +46,14 @@ func toUserDTO(u *domain.User) userDTO {
 	}
 }
 
-// GetMe handles GET /api/v1/users/me (member).
+// GetMe godoc
+// @Summary   Get the authenticated user's profile
+// @Tags      users
+// @Produce   json
+// @Security  BearerAuth
+// @Success   200  {object}  response.Envelope{data=userDTO}
+// @Failure   401  {object}  response.Envelope
+// @Router    /users/me [get]
 func (h *UserHandler) GetMe(c *gin.Context) {
 	userID := c.MustGet(middleware.ContextKeyUserID).(uuid.UUID)
 	user, err := h.svc.GetByID(c.Request.Context(), userID)
@@ -81,9 +88,15 @@ type clerkWebhookPayload struct {
 	Data clerkUserData `json:"data"`
 }
 
-// HandleClerkWebhook handles POST /api/v1/webhooks/clerk (public, but
-// signature-verified). It upserts the local user row on
-// user.created/user.updated — see docs/Schema.md §2.2.
+// HandleClerkWebhook godoc
+// @Summary      Clerk user.created/user.updated webhook
+// @Description  Public but signature-verified (Svix headers). Upserts the local user row — see docs/Schema.md §2.2.
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  response.Envelope{data=userDTO}
+// @Failure      401  {object}  response.Envelope
+// @Router       /webhooks/clerk [post]
 func (h *UserHandler) HandleClerkWebhook(c *gin.Context) {
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {

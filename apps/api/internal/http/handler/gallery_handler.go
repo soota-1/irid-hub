@@ -52,7 +52,15 @@ func toGalleryItemDTO(g *domain.GalleryItem) galleryItemDTO {
 	}
 }
 
-// List handles GET /api/v1/gallery (public, paginated, filter by event_id).
+// List godoc
+// @Summary  List gallery items
+// @Tags     gallery
+// @Produce  json
+// @Param    page      query     int     false  "Page number"     default(1)
+// @Param    per_page  query     int     false  "Items per page"  default(20)
+// @Param    event_id  query     string  false  "Filter by event ID"
+// @Success  200  {object}  response.Envelope{data=[]galleryItemDTO}
+// @Router   /gallery [get]
 func (h *GalleryHandler) List(c *gin.Context) {
 	community, err := h.communityRepo.GetCurrent(c.Request.Context())
 	if err != nil {
@@ -84,7 +92,17 @@ type presignUploadRequest struct {
 	SizeBytes   int64  `json:"size_bytes" binding:"required"`
 }
 
-// PresignUpload handles POST /api/v1/gallery/presigned-url (admin).
+// PresignUpload godoc
+// @Summary      Request a presigned R2 upload URL
+// @Description  Validates content type and size before issuing a short-lived presigned PUT URL.
+// @Tags         gallery
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        body  body      presignUploadRequest  true  "Upload metadata"
+// @Success      200  {object}  response.Envelope
+// @Failure      422  {object}  response.Envelope
+// @Router       /gallery/presigned-url [post]
 func (h *GalleryHandler) PresignUpload(c *gin.Context) {
 	var req presignUploadRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -113,7 +131,16 @@ type createGalleryItemRequest struct {
 	EventID      string `json:"event_id"`
 }
 
-// Create handles POST /api/v1/gallery (admin, save metadata after upload).
+// Create godoc
+// @Summary      Save gallery item metadata after a successful upload
+// @Tags         gallery
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        body  body      createGalleryItemRequest  true  "Gallery item"
+// @Success      201  {object}  response.Envelope{data=galleryItemDTO}
+// @Failure      422  {object}  response.Envelope
+// @Router       /gallery [post]
 func (h *GalleryHandler) Create(c *gin.Context) {
 	var req createGalleryItemRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -150,7 +177,14 @@ func (h *GalleryHandler) Create(c *gin.Context) {
 	response.OK(c, http.StatusCreated, toGalleryItemDTO(item))
 }
 
-// Delete handles DELETE /api/v1/gallery/:id (admin).
+// Delete godoc
+// @Summary   Delete a gallery item
+// @Tags      gallery
+// @Security  BearerAuth
+// @Param     id  path  string  true  "Gallery item ID"
+// @Success   204  "No Content"
+// @Failure   404  {object}  response.Envelope
+// @Router    /gallery/{id} [delete]
 func (h *GalleryHandler) Delete(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

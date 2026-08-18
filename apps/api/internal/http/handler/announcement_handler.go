@@ -74,10 +74,26 @@ func (h *AnnouncementHandler) listCommon(c *gin.Context, includeMembers bool) {
 	response.OKPaginated(c, dtos, response.Meta{Page: page, PerPage: perPage, Total: total})
 }
 
-// ListPublic handles GET /api/v1/announcements (public).
+// ListPublic godoc
+// @Summary  List public announcements
+// @Tags     announcements
+// @Produce  json
+// @Param    page      query     int  false  "Page number"     default(1)
+// @Param    per_page  query     int  false  "Items per page"  default(20)
+// @Success  200  {object}  response.Envelope{data=[]announcementDTO}
+// @Router   /announcements [get]
 func (h *AnnouncementHandler) ListPublic(c *gin.Context) { h.listCommon(c, false) }
 
-// ListInternal handles GET /api/v1/announcements/internal (member-only).
+// ListInternal godoc
+// @Summary   List announcements including members-only ones
+// @Tags      announcements
+// @Produce   json
+// @Security  BearerAuth
+// @Param     page      query     int  false  "Page number"     default(1)
+// @Param     per_page  query     int  false  "Items per page"  default(20)
+// @Success   200  {object}  response.Envelope{data=[]announcementDTO}
+// @Failure   403  {object}  response.Envelope
+// @Router    /announcements/internal [get]
 func (h *AnnouncementHandler) ListInternal(c *gin.Context) { h.listCommon(c, true) }
 
 type upsertAnnouncementRequest struct {
@@ -88,7 +104,17 @@ type upsertAnnouncementRequest struct {
 	PublishedAt *time.Time `json:"published_at"`
 }
 
-// Create handles POST /api/v1/announcements (admin, draft via published_at=null).
+// Create godoc
+// @Summary      Create an announcement
+// @Description  Omit published_at (or send null) to save as a draft.
+// @Tags         announcements
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        body  body      upsertAnnouncementRequest  true  "Announcement"
+// @Success      201  {object}  response.Envelope{data=announcementDTO}
+// @Failure      422  {object}  response.Envelope
+// @Router       /announcements [post]
 func (h *AnnouncementHandler) Create(c *gin.Context) {
 	var req upsertAnnouncementRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -118,7 +144,17 @@ func (h *AnnouncementHandler) Create(c *gin.Context) {
 	response.OK(c, http.StatusCreated, toAnnouncementDTO(a))
 }
 
-// Update handles PATCH /api/v1/announcements/:id (admin).
+// Update godoc
+// @Summary   Update an announcement
+// @Tags      announcements
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     id    path      string                      true  "Announcement ID"
+// @Param     body  body      upsertAnnouncementRequest  true  "Announcement"
+// @Success   200  {object}  response.Envelope{data=announcementDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /announcements/{id} [patch]
 func (h *AnnouncementHandler) Update(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -146,7 +182,14 @@ func (h *AnnouncementHandler) Update(c *gin.Context) {
 	response.OK(c, http.StatusOK, toAnnouncementDTO(a))
 }
 
-// Delete handles DELETE /api/v1/announcements/:id (admin).
+// Delete godoc
+// @Summary   Delete an announcement
+// @Tags      announcements
+// @Security  BearerAuth
+// @Param     id  path  string  true  "Announcement ID"
+// @Success   204  "No Content"
+// @Failure   404  {object}  response.Envelope
+// @Router    /announcements/{id} [delete]
 func (h *AnnouncementHandler) Delete(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

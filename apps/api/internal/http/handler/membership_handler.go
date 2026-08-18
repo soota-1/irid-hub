@@ -42,7 +42,18 @@ func toMembershipDTO(m domain.Membership) membershipDTO {
 	}
 }
 
-// List handles GET /api/v1/members (admin).
+// List godoc
+// @Summary   List members
+// @Tags      members
+// @Produce   json
+// @Security  BearerAuth
+// @Param     page      query     int     false  "Page number"      default(1)
+// @Param     per_page  query     int     false  "Items per page"   default(20)
+// @Param     role      query     string  false  "Filter by role"    Enums(member, officer, admin)
+// @Param     status    query     string  false  "Filter by status"  Enums(active, inactive, banned)
+// @Success   200  {object}  response.Envelope{data=[]membershipDTO}
+// @Failure   403  {object}  response.Envelope
+// @Router    /members [get]
 func (h *MembershipHandler) List(c *gin.Context) {
 	community, err := h.communityRepo.GetCurrent(c.Request.Context())
 	if err != nil {
@@ -78,7 +89,17 @@ type updateMembershipRoleRequest struct {
 	Role string `json:"role" binding:"required"`
 }
 
-// UpdateRole handles PATCH /api/v1/members/:id/role (admin).
+// UpdateRole godoc
+// @Summary   Change a member's role
+// @Tags      members
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     id    path      string                       true  "Membership ID"
+// @Param     body  body      updateMembershipRoleRequest  true  "New role"
+// @Success   200  {object}  response.Envelope{data=membershipDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /members/{id}/role [patch]
 func (h *MembershipHandler) UpdateRole(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

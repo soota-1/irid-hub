@@ -47,7 +47,14 @@ func toAchievementDTO(a *domain.Achievement) achievementDTO {
 	}
 }
 
-// List handles GET /api/v1/achievements (public, paginated).
+// List godoc
+// @Summary  List achievements
+// @Tags     achievements
+// @Produce  json
+// @Param    page      query     int  false  "Page number"     default(1)
+// @Param    per_page  query     int  false  "Items per page"  default(20)
+// @Success  200  {object}  response.Envelope{data=[]achievementDTO}
+// @Router   /achievements [get]
 func (h *AchievementHandler) List(c *gin.Context) {
 	community, err := h.communityRepo.GetCurrent(c.Request.Context())
 	if err != nil {
@@ -77,7 +84,16 @@ type upsertAchievementRequest struct {
 	MemberID       string    `json:"member_id"`
 }
 
-// Create handles POST /api/v1/achievements (admin).
+// Create godoc
+// @Summary   Create an achievement
+// @Tags      achievements
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     body  body      upsertAchievementRequest  true  "Achievement"
+// @Success   201  {object}  response.Envelope{data=achievementDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /achievements [post]
 func (h *AchievementHandler) Create(c *gin.Context) {
 	var req upsertAchievementRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -105,7 +121,17 @@ func (h *AchievementHandler) Create(c *gin.Context) {
 	response.OK(c, http.StatusCreated, toAchievementDTO(a))
 }
 
-// Update handles PATCH /api/v1/achievements/:id (admin).
+// Update godoc
+// @Summary   Update an achievement
+// @Tags      achievements
+// @Accept    json
+// @Produce   json
+// @Security  BearerAuth
+// @Param     id    path      string                     true  "Achievement ID"
+// @Param     body  body      upsertAchievementRequest  true  "Achievement"
+// @Success   200  {object}  response.Envelope{data=achievementDTO}
+// @Failure   422  {object}  response.Envelope
+// @Router    /achievements/{id} [patch]
 func (h *AchievementHandler) Update(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -133,7 +159,14 @@ func (h *AchievementHandler) Update(c *gin.Context) {
 	response.OK(c, http.StatusOK, toAchievementDTO(a))
 }
 
-// Delete handles DELETE /api/v1/achievements/:id (admin).
+// Delete godoc
+// @Summary   Delete an achievement
+// @Tags      achievements
+// @Security  BearerAuth
+// @Param     id  path  string  true  "Achievement ID"
+// @Success   204  "No Content"
+// @Failure   404  {object}  response.Envelope
+// @Router    /achievements/{id} [delete]
 func (h *AchievementHandler) Delete(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
