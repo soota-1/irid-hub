@@ -1,18 +1,18 @@
 import { cn } from "@/shared/lib/cn";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
 
-export interface GradientMeshProps {
-  className?: string;
-}
+/** Subtle animated gradient mesh background — Design.md §3 (hero, CTA
+ * sections). Animation disabled under prefers-reduced-motion. */
+export function GradientMesh({ className }: { className?: string }) {
+  const reducedMotion = useReducedMotion();
 
-/** The slow-moving animated gradient mesh background — Design.md §1/§6.
- * Respects prefers-reduced-motion via the `motion-reduce:animate-none`
- * utility (the mesh becomes a static gradient instead). */
-export function GradientMesh({ className }: GradientMeshProps) {
   return (
     <div
-      aria-hidden="true"
+      aria-hidden
       className={cn(
-        "absolute inset-0 bg-iridescent bg-mesh-lg animate-mesh-move motion-reduce:animate-none opacity-90",
+        "pointer-events-none absolute inset-0 opacity-40 blur-3xl",
+        "bg-iridescent bg-[length:200%_200%]",
+        !reducedMotion && "animate-mesh-move",
         className,
       )}
     />

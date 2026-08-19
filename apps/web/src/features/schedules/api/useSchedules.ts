@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { TrainingSchedule } from "../types";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { TrainingScheduleDTO } from "@/shared/types/api";
 
 export function useSchedules() {
+  const apiClient = useApiClient();
+
   return useQuery({
     queryKey: ["schedules"],
-    queryFn: async () => (await apiClient.get<TrainingSchedule[]>("/schedules")).data,
-    staleTime: 60_000,
+    queryFn: async () => {
+      const { data } = await apiClient<TrainingScheduleDTO[]>("/schedules");
+      return data;
+    },
   });
 }

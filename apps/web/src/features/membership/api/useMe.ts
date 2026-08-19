@@ -1,25 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
-
-export interface Me {
-  id: string;
-  email: string;
-  full_name: string | null;
-  avatar_url: string | null;
-  phone: string | null;
-  created_at: string;
-  updated_at: string;
-}
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { UserDTO } from "@/shared/types/api";
 
 export function useMe() {
-  const { getToken, isSignedIn } = useAuth();
+  const apiClient = useApiClient();
+  const { isSignedIn } = useAuth();
+
   return useQuery({
-    queryKey: ["me"],
+    queryKey: ["users", "me"],
     queryFn: async () => {
-      const token = await getToken();
-      return (await apiClient.get<Me>("/users/me", { token })).data;
+      const { data } = await apiClient<UserDTO>("/users/me");
+      return data;
     },
-    enabled: !!isSignedIn,
+    enabled: Boolean(isSignedIn),
   });
 }

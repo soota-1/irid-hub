@@ -1,0 +1,32 @@
+{
+  "kicker": "Events",
+  "title": "Kalender & Event Iridescent",
+  "subtitle": "Latihan rutin, kompetisi, dan agenda sosial komunitas — semua dalam satu tempat.",
+  "tabs": { "list": "Daftar", "calendar": "Kalender" },
+  "empty": "Belum ada event terjadwal.",
+  "calendar": {
+    "prevMonth": "Bulan sebelumnya",
+    "nextMonth": "Bulan berikutnya",
+    "moreCount": "+{{count}} lagi",
+    "days": ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"]
+  },
+  "detail": {
+    "srLabel": "Detail event {{title}}",
+    "rsvpTitle": "RSVP kehadiran kamu",
+    "signInToRsvp": "Masuk untuk RSVP ke event ini.",
+    "rsvpSaved": "RSVP tersimpan",
+    "rsvpFailed": "Gagal menyimpan RSVP, coba lagi"
+  },
+  "category": {
+    "training": "Latihan",
+    "competition": "Kompetisi",
+    "social": "Sosial",
+    "other": "Lainnya"
+  },
+  "rsvp": {
+    "going": "Kamu akan hadir",
+    "maybe": "Mungkin hadir",
+    "not_going": "Tidak hadir",
+    "options": { "going": "Hadir", "maybe": "Mungkin", "not_going": "Tidak hadir" }
+  }
+}

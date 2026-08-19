@@ -5,6 +5,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "resolveJsonModule": true,
 
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -17,13 +18,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@irid-hub/shared-types": ["../../packages/shared-types/api.ts"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

@@ -1,0 +1,7 @@
+{
+  "kicker": "Kelas & Latihan",
+  "title": "Jadwal Latihan Rutin",
+  "subtitle": "Latihan mingguan, dari foundation sampai advanced. Datang tanpa audisi.",
+  "empty": "Belum ada jadwal latihan aktif.",
+  "days": ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+}

@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "kelas": "Classes",
+    "events": "Events",
+    "galeri": "Gallery",
+    "prestasi": "Achievements",
+    "komunitas": "Community",
+    "pengumuman": "Announcements"
+  },
+  "joinCommunity": "Join the Community",
+  "themeToggle": {
+    "toLight": "Switch to light mode",
+    "toDark": "Switch to dark mode"
+  },
+  "languageToggle": {
+    "toEnglish": "Switch to English",
+    "toIndonesian": "Switch to Indonesian"
+  },
+  "openMenu": "Open menu",
+  "navMenuTitle": "Navigation menu",
+  "footer": {
+    "copyright": "© {{year}} Iridescent. Built with movement, light, and community.",
+    "instagramAria": "Iridescent Instagram"
+  },
+  "notFound": {
+    "kicker": "404",
+    "title": "Page not found",
+    "description": "The page you're looking for may have moved or never existed."
+  },
+  "backToHome": "Back to home",
+  "lightbox": {
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next"
+  }
+}

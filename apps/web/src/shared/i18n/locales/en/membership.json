@@ -1,0 +1,27 @@
+{
+  "join": {
+    "kicker": "Join the Community",
+    "title": "Ready to Move With Us?",
+    "subtitle": "Find your community, classes, and space to grow together.",
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "motivation": "Why do you want to join?"
+    },
+    "errors": {
+      "fullName": "Name must be at least 2 characters",
+      "email": "Invalid email format",
+      "phone": "Invalid phone number",
+      "submitFailed": "Failed to submit the form. Please try again shortly."
+    },
+    "submit": "Submit Application",
+    "submitting": "Submitting...",
+    "successTitle": "Application submitted!",
+    "successBody": "Thanks for signing up. Our team will review your application and reach out by email."
+  },
+  "profile": {
+    "kicker": "My Account",
+    "title": "Member Profile"
+  }
+}

@@ -1,41 +1,52 @@
 import { env } from "./env";
-import type { ApiEnvelope, ApiErrorBody, ApiMeta } from "@/shared/types/api";
+import type { ApiErrorBody, Envelope, PaginatedMeta } from "@/shared/types/api";
 
-/** Thrown whenever the backend returns `success: false` — carries the
- * error code/fields straight from the envelope (docs/Schema.md §4) so
- * callers can branch on `err.code` instead of parsing messages. */
-export class ApiClientError extends Error {
-  readonly status: number;
-  readonly code: string;
-  readonly fields?: Record<string, string>;
+export class ApiError extends Error {
+  code: string;
+  fields?: Record<string, string>;
 
-  constructor(status: number, body: ApiErrorBody) {
+  constructor(body: ApiErrorBody) {
     super(body.message);
-    this.name = "ApiClientError";
-    this.status = status;
+    this.name = "ApiError";
     this.code = body.code;
     this.fields = body.fields;
   }
 }
 
-interface RequestOptions extends Omit<RequestInit, "body"> {
-  token?: string | null;
-  body?: unknown;
-}
-
 export interface ApiResult<T> {
   data: T;
-  meta: ApiMeta | null;
+  meta: PaginatedMeta | null;
 }
 
-async function request<T>(path: string, { token, body, headers, ...init }: RequestOptions = {}): Promise<ApiResult<T>> {
-  const res = await fetch(`${env.apiBaseUrl}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
+interface RequestOptions {
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
+  body?: unknown;
+  token?: string | null;
+  query?: Record<string, string | number | boolean | undefined>;
+}
+
+function buildUrl(path: string, query?: RequestOptions["query"]) {
+  const url = new URL(`${env.apiBaseUrl}${path}`);
+  if (query) {
+    for (const [key, value] of Object.entries(query)) {
+      if (value !== undefined && value !== "") url.searchParams.set(key, String(value));
+    }
+  }
+  return url.toString();
+}
+
+/** Thin fetch wrapper that unwraps the {success,data,meta,error} envelope
+ * from docs/Schema.md §4 and injects the Clerk bearer token when provided. */
+export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<ApiResult<T>> {
+  const { method = "GET", body, token, query } = options;
+
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch(buildUrl(path, query), {
+    method,
+    headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
 
@@ -43,16 +54,13 @@ async function request<T>(path: string, { token, body, headers, ...init }: Reque
     return { data: undefined as T, meta: null };
   }
 
-  const envelope = (await res.json()) as ApiEnvelope<T>;
-  if (!envelope.success || !res.ok) {
-    throw new ApiClientError(res.status, envelope.error ?? { code: "UNKNOWN_ERROR", message: "Terjadi kesalahan tidak terduga" });
-  }
-  return { data: envelope.data as T, meta: envelope.meta };
-}
+  const json = (await res.json()) as Envelope<T>;
 
-export const apiClient = {
-  get: <T>(path: string, opts?: RequestOptions) => request<T>(path, { ...opts, method: "GET" }),
-  post: <T>(path: string, body?: unknown, opts?: RequestOptions) => request<T>(path, { ...opts, method: "POST", body }),
-  patch: <T>(path: string, body?: unknown, opts?: RequestOptions) => request<T>(path, { ...opts, method: "PATCH", body }),
-  delete: <T>(path: string, opts?: RequestOptions) => request<T>(path, { ...opts, method: "DELETE" }),
-};
+  if (!res.ok || !json.success) {
+    throw new ApiError(
+      json.error ?? { code: "INTERNAL_ERROR", message: "Terjadi kesalahan tak terduga" },
+    );
+  }
+
+  return { data: json.data, meta: json.meta };
+}

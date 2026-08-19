@@ -1,38 +1,39 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-type Theme = "light" | "dark" | "system";
+type Theme = "dark" | "light";
+const STORAGE_KEY = "iridescent-theme";
 
 interface ThemeContextValue {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const STORAGE_KEY = "irid-hub-theme";
-
+/** Dark is the product default (Design.md §2.1) — light is an opt-in the
+ * user can toggle, persisted to localStorage, applied via [data-theme]. */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => (localStorage.getItem(STORAGE_KEY) as Theme) || "system");
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === "undefined") return "dark";
+    return (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? "dark";
+  });
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "system") {
-      root.removeAttribute("data-theme");
+    if (theme === "light") {
+      root.setAttribute("data-theme", "light");
     } else {
-      root.setAttribute("data-theme", theme);
+      root.removeAttribute("data-theme");
     }
+    localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
 
-  function setTheme(next: Theme) {
-    localStorage.setItem(STORAGE_KEY, next);
-    setThemeState(next);
-  }
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
 
-  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 }
 
-export function useTheme(): ThemeContextValue {
+export function useTheme() {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
   return ctx;

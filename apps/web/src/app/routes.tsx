@@ -4,6 +4,8 @@ import { SignIn, SignUp } from "@clerk/clerk-react";
 import { PublicLayout } from "./layouts/PublicLayout";
 import { AdminLayout } from "./layouts/AdminLayout";
 import { ProtectedRoute } from "./layouts/ProtectedRoute";
+import { Skeleton } from "@/components/ui/skeleton";
+import NotFoundPage from "./NotFoundPage";
 
 const LandingPage = lazy(() => import("@/features/landing").then((m) => ({ default: m.LandingPage })));
 const CommunityProfilePage = lazy(() =>
@@ -15,14 +17,22 @@ const AnnouncementsPage = lazy(() =>
   import("@/features/announcements").then((m) => ({ default: m.AnnouncementsPage })),
 );
 const GalleryPage = lazy(() => import("@/features/gallery").then((m) => ({ default: m.GalleryPage })));
-const AchievementsPage = lazy(() => import("@/features/achievements").then((m) => ({ default: m.AchievementsPage })));
-const MembershipFormPage = lazy(() => import("@/features/membership").then((m) => ({ default: m.MembershipFormPage })));
-const MemberProfilePage = lazy(() => import("@/features/membership").then((m) => ({ default: m.MemberProfilePage })));
+const AchievementsPage = lazy(() =>
+  import("@/features/achievements").then((m) => ({ default: m.AchievementsPage })),
+);
+const MembershipFormPage = lazy(() =>
+  import("@/features/membership").then((m) => ({ default: m.MembershipFormPage })),
+);
+const MemberProfilePage = lazy(() =>
+  import("@/features/membership").then((m) => ({ default: m.MemberProfilePage })),
+);
 
 const AdminDashboardPage = lazy(() =>
   import("@/features/admin/dashboard").then((m) => ({ default: m.AdminDashboardPage })),
 );
-const EventsAdminPage = lazy(() => import("@/features/admin/events-admin").then((m) => ({ default: m.EventsAdminPage })));
+const EventsAdminPage = lazy(() =>
+  import("@/features/admin/events-admin").then((m) => ({ default: m.EventsAdminPage })),
+);
 const SchedulesAdminPage = lazy(() =>
   import("@/features/admin/schedules-admin").then((m) => ({ default: m.SchedulesAdminPage })),
 );
@@ -39,10 +49,12 @@ const MembersAdminPage = lazy(() =>
   import("@/features/admin/members-admin").then((m) => ({ default: m.MembersAdminPage })),
 );
 
-const NotFoundPage = lazy(() => import("@/app/NotFoundPage").then((m) => ({ default: m.NotFoundPage })));
-
 function PageFallback() {
-  return <div className="min-h-[60vh]" aria-busy="true" />;
+  return (
+    <div className="mx-auto max-w-6xl px-5 py-16">
+      <Skeleton className="h-96 w-full" />
+    </div>
+  );
 }
 
 export function AppRoutes() {
@@ -58,8 +70,8 @@ export function AppRoutes() {
           <Route path="/galeri" element={<GalleryPage />} />
           <Route path="/prestasi" element={<AchievementsPage />} />
           <Route path="/gabung" element={<MembershipFormPage />} />
-          <Route path="/sign-in/*" element={<SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" />} />
-          <Route path="/sign-up/*" element={<SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />} />
+          <Route path="/sign-in/*" element={<div className="flex justify-center py-16"><SignIn routing="path" path="/sign-in" /></div>} />
+          <Route path="/sign-up/*" element={<div className="flex justify-center py-16"><SignUp routing="path" path="/sign-up" /></div>} />
           <Route
             path="/akun"
             element={
@@ -68,7 +80,6 @@ export function AppRoutes() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
         <Route
@@ -87,6 +98,8 @@ export function AppRoutes() {
           <Route path="achievements" element={<AchievementsAdminPage />} />
           <Route path="members" element={<MembersAdminPage />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );

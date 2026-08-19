@@ -1,0 +1,27 @@
+{
+  "join": {
+    "kicker": "Gabung Komunitas",
+    "title": "Ready to Move With Us?",
+    "subtitle": "Temukan komunitas, kelas, dan ruang untuk berkembang bersama.",
+    "fields": {
+      "fullName": "Nama Lengkap",
+      "email": "Email",
+      "phone": "Nomor Telepon",
+      "motivation": "Kenapa mau gabung?"
+    },
+    "errors": {
+      "fullName": "Nama minimal 2 karakter",
+      "email": "Format email tidak valid",
+      "phone": "Nomor telepon tidak valid",
+      "submitFailed": "Gagal mengirim formulir. Coba lagi sebentar lagi."
+    },
+    "submit": "Kirim Pendaftaran",
+    "submitting": "Mengirim...",
+    "successTitle": "Pendaftaran terkirim!",
+    "successBody": "Terima kasih sudah mendaftar. Tim kami akan meninjau formulir kamu dan menghubungi lewat email."
+  },
+  "profile": {
+    "kicker": "Akun Saya",
+    "title": "Profil Member"
+  }
+}

@@ -1,70 +1,59 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { apiClient, ApiClientError } from "./apiClient";
+import { describe, expect, it, vi, afterEach } from "vitest";
+import { apiRequest, ApiError } from "./apiClient";
 
-function mockFetchResponse(body: unknown, status = 200) {
-  return vi.fn().mockResolvedValue({
+const originalFetch = global.fetch;
+
+afterEach(() => {
+  global.fetch = originalFetch;
+  vi.restoreAllMocks();
+});
+
+function mockFetchOnce(body: unknown, status = 200) {
+  global.fetch = vi.fn().mockResolvedValue({
     status,
     ok: status >= 200 && status < 300,
     json: async () => body,
-  });
+  }) as unknown as typeof fetch;
 }
 
-describe("apiClient", () => {
-  beforeEach(() => {
-    vi.restoreAllMocks();
-  });
+describe("apiRequest", () => {
+  it("unwraps data + meta from a successful envelope", async () => {
+    mockFetchOnce({ success: true, data: [{ id: "1" }], meta: { page: 1, per_page: 20, total: 1 }, error: null });
 
-  it("returns data and meta when the envelope reports success", async () => {
-    global.fetch = mockFetchResponse({
-      success: true,
-      data: { id: "1", title: "Latihan" },
-      meta: { page: 1, per_page: 20, total: 1 },
-      error: null,
-    });
+    const result = await apiRequest<{ id: string }[]>("/events");
 
-    const result = await apiClient.get<{ id: string; title: string }>("/events/1");
-
-    expect(result.data).toEqual({ id: "1", title: "Latihan" });
+    expect(result.data).toEqual([{ id: "1" }]);
     expect(result.meta).toEqual({ page: 1, per_page: 20, total: 1 });
   });
 
-  it("throws ApiClientError with the envelope's code/message when success is false", async () => {
-    global.fetch = mockFetchResponse(
-      {
-        success: false,
-        data: null,
-        meta: null,
-        error: { code: "VALIDATION_ERROR", message: "Field tidak valid", fields: { email: "wajib diisi" } },
-      },
+  it("throws ApiError with the envelope's error body when success is false", async () => {
+    mockFetchOnce(
+      { success: false, data: null, meta: null, error: { code: "VALIDATION_ERROR", message: "Field invalid", fields: { email: "bad" } } },
       422,
     );
 
-    await expect(apiClient.post("/membership-applications", {})).rejects.toMatchObject({
-      status: 422,
+    await expect(apiRequest("/membership-applications", { method: "POST", body: {} })).rejects.toMatchObject({
       code: "VALIDATION_ERROR",
-      fields: { email: "wajib diisi" },
+      message: "Field invalid",
     });
   });
 
-  it("is an instance of ApiClientError so callers can narrow with instanceof", async () => {
-    global.fetch = mockFetchResponse(
-      { success: false, data: null, meta: null, error: { code: "NOT_FOUND", message: "Tidak ditemukan" } },
-      404,
-    );
+  it("throws a plain ApiError instance so callers can narrow on it", async () => {
+    mockFetchOnce({ success: false, data: null, meta: null, error: { code: "FORBIDDEN", message: "nope" } }, 403);
 
     try {
-      await apiClient.get("/events/missing");
-      expect.unreachable("should have thrown");
+      await apiRequest("/admin/dashboard/summary");
+      expect.unreachable();
     } catch (err) {
-      expect(err).toBeInstanceOf(ApiClientError);
+      expect(err).toBeInstanceOf(ApiError);
+      expect((err as ApiError).code).toBe("FORBIDDEN");
     }
   });
 
-  it("returns undefined data for 204 No Content responses without parsing a body", async () => {
-    global.fetch = vi.fn().mockResolvedValue({ status: 204, ok: true, json: async () => { throw new Error("should not be called"); } });
+  it("returns undefined data for 204 No Content without parsing a body", async () => {
+    global.fetch = vi.fn().mockResolvedValue({ status: 204, ok: true, json: async () => { throw new Error("should not be called"); } }) as unknown as typeof fetch;
 
-    const result = await apiClient.delete("/events/1");
-
+    const result = await apiRequest("/schedules/abc");
     expect(result.data).toBeUndefined();
   });
 });

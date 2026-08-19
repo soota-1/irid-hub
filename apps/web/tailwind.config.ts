@@ -1,20 +1,54 @@
 import type { Config } from "tailwindcss";
-import preline from "preline/plugin";
+import animate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
 
 export default {
-  darkMode: ["class", '[data-theme="dark"]'],
-  content: ["./index.html", "./src/**/*.{ts,tsx}", "./node_modules/preline/dist/*.js"],
+  darkMode: ["class"],
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        display: ['"Clash Display"', '"Cabinet Grotesk"', "system-ui", "sans-serif"],
+        body: ['"General Sans"', "Inter", "system-ui", "sans-serif"],
+      },
+      fontSize: {
+        display: ["4.5rem", { lineHeight: "1.05", fontWeight: "700" }],
+        h1: ["2.5rem", { lineHeight: "1.1", fontWeight: "700" }],
+        h2: ["1.875rem", { lineHeight: "1.2", fontWeight: "600" }],
+        h3: ["1.5rem", { lineHeight: "1.3", fontWeight: "600" }],
+        "body-lg": ["1.125rem", { lineHeight: "1.6", fontWeight: "400" }],
+        caption: ["0.875rem", { lineHeight: "1.4", fontWeight: "500" }],
+      },
       colors: {
-        neutral: {
-          950: "var(--neutral-950)",
-          800: "var(--neutral-800)",
-          500: "var(--neutral-500)",
-          200: "var(--neutral-200)",
-          50: "var(--neutral-50)",
+        border: "var(--border)",
+        input: "var(--border)",
+        ring: "var(--ring)",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: {
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
         },
+        popover: {
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
+        },
+        primary: {
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
+        },
+        secondary: {
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
+        },
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
+        },
+        success: "var(--success)",
+        warning: "var(--warning)",
+        danger: "var(--danger)",
+        info: "var(--info)",
         iri: {
           violet: "var(--iri-violet)",
           magenta: "var(--iri-magenta)",
@@ -24,44 +58,24 @@ export default {
           cyan: "var(--iri-cyan)",
           azure: "var(--iri-azure)",
         },
-        success: "var(--success)",
-        warning: "var(--warning)",
-        danger: "var(--danger)",
-        info: "var(--info)",
-        surface: "var(--surface)",
-      },
-      textColor: {
-        surface: "var(--surface-text)",
-        "surface-muted": "var(--surface-text-muted)",
       },
       backgroundImage: {
         iridescent: "var(--gradient-iridescent)",
-        events: "var(--gradient-events)",
-        schedules: "var(--gradient-schedules)",
-        achievements: "var(--gradient-achievements)",
-        gallery: "var(--gradient-gallery)",
+        "iri-events": "var(--gradient-events)",
+        "iri-schedules": "var(--gradient-schedules)",
+        "iri-achievements": "var(--gradient-achievements)",
+        "iri-gallery": "var(--gradient-gallery)",
       },
       borderRadius: {
-        lg: "var(--radius-lg)",
-        md: "var(--radius-md)",
-      },
-      fontFamily: {
-        display: ["'Clash Display'", "system-ui", "sans-serif"],
-        body: ["'Inter'", "'General Sans'", "system-ui", "sans-serif"],
-      },
-      fontSize: {
-        display: ["3.5rem", { lineHeight: "1.05", fontWeight: "700" }],
-        h1: ["2.5rem", { lineHeight: "1.1", fontWeight: "700" }],
-        h2: ["1.875rem", { lineHeight: "1.2", fontWeight: "600" }],
-        h3: ["1.5rem", { lineHeight: "1.3", fontWeight: "600" }],
-        "body-lg": ["1.125rem", { lineHeight: "1.6", fontWeight: "400" }],
-        caption: ["0.875rem", { lineHeight: "1.4", fontWeight: "500" }],
+        sm: "8px",
+        md: "12px",
+        btn: "16px",
+        lg: "24px",
       },
       keyframes: {
         "mesh-move": {
-          "0%": { backgroundPosition: "0% 50%" },
+          "0%, 100%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
@@ -69,13 +83,10 @@ export default {
         },
       },
       animation: {
-        "mesh-move": "mesh-move 24s ease-in-out infinite",
-        shimmer: "shimmer 1.8s linear",
-      },
-      backgroundSize: {
-        "mesh-lg": "200% 200%",
+        "mesh-move": "mesh-move 12s ease-in-out infinite",
+        shimmer: "shimmer 2s linear infinite",
       },
     },
   },
-  plugins: [preline, typography],
+  plugins: [animate, typography],
 } satisfies Config;

@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "kickerSuffix": "Dance Community",
+    "subtitle": "Find space to move, learn, collaborate, and grow together with other dancers.",
+    "primaryCta": "Join the Community",
+    "secondaryCta": "Explore Classes"
+  },
+  "snapshot": {
+    "members": "Members",
+    "classes": "Classes",
+    "events": "Events",
+    "danceStyles": "Dance Styles"
+  },
+  "doors": {
+    "kicker": "What's happening here",
+    "title": "Four doors into the community",
+    "subtitle": "Each area has its own identity color — so you always know where you are.",
+    "classes": { "title": "Weekly Classes", "description": "Eight styles, from foundation to advanced. No audition needed." },
+    "events": { "title": "Events & Cypher", "description": "Regular practice, competitions, and community socials." },
+    "community": { "title": "Community", "description": "Iridescent's story, values, and open training space." },
+    "achievements": { "title": "Achievements", "description": "Community milestones and dancer achievements we celebrate." }
+  },
+  "upcomingEvents": {
+    "kicker": "Events",
+    "title": "Coming up",
+    "viewAll": "All events"
+  },
+  "achievements": {
+    "kicker": "Achievements",
+    "title": "What we celebrate together"
+  },
+  "gallery": {
+    "kicker": "Gallery",
+    "title": "Community documentation",
+    "viewAll": "Open gallery"
+  },
+  "stories": {
+    "kicker": "Member Stories",
+    "title": "What our weekly regulars say",
+    "items": [
+      { "quote": "It's not just a training space. Here I found people who make me brave enough to grow.", "name": "Mira Anggraini", "style": "K-Pop / Jazz" },
+      { "quote": "I joined with zero experience. Three months later I was brave enough to get on stage.", "name": "Yudha Satria", "style": "Popping" },
+      { "quote": "What keeps me coming back every week isn't the choreography — it's the people.", "name": "Sari Lestari", "style": "Contemporary" }
+    ]
+  },
+  "finalCta": {
+    "title": "READY TO MOVE WITH US?",
+    "subtitle": "Find your community, classes, and space to grow together.",
+    "cta": "Join the Community"
+  }
+}

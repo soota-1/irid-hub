@@ -1,140 +1,147 @@
-import { useState } from "react";
 import { Check, X } from "lucide-react";
-import { format } from "date-fns";
-import { AdminDataTable, AdminAccessDenied, AdminStatusBadge } from "@/shared/components";
-import { ApiClientError } from "@/shared/lib/apiClient";
+import { toast } from "sonner";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AdminDataTable, type AdminDataTableColumn } from "@/shared/components";
+import type { MembershipApplicationDTO, MembershipDTO } from "@/shared/types/api";
 import {
   useMembershipApplications,
-  useApplicationMutations,
+  useApproveApplication,
+  useRejectApplication,
   useMembers,
   useUpdateMemberRole,
 } from "../api/useMembersAdmin";
 
-type Tab = "applications" | "members";
+function ApplicationsTab() {
+  const { data, isLoading } = useMembershipApplications("pending");
+  const approve = useApproveApplication();
+  const reject = useRejectApplication();
 
-const roleOptions = ["member", "officer", "admin"];
+  const columns: AdminDataTableColumn<MembershipApplicationDTO>[] = [
+    { key: "full_name", header: "Nama", render: (a) => <span className="font-medium">{a.full_name}</span> },
+    { key: "email", header: "Email", render: (a) => a.email },
+    { key: "phone", header: "Telepon", render: (a) => a.phone },
+    { key: "motivation", header: "Motivasi", className: "max-w-xs truncate", render: (a) => a.motivation ?? "-" },
+    {
+      key: "actions",
+      header: "",
+      className: "text-right",
+      render: (a) => (
+        <div className="flex justify-end gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Setujui"
+            onClick={() =>
+              approve.mutate(a.id, {
+                onSuccess: () => toast.success(`${a.full_name} disetujui sebagai member`),
+                onError: () => toast.error("Gagal menyetujui aplikasi"),
+              })
+            }
+          >
+            <Check className="h-4 w-4 text-success" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Tolak"
+            onClick={() =>
+              reject.mutate(a.id, {
+                onSuccess: () => toast.success(`Aplikasi ${a.full_name} ditolak`),
+                onError: () => toast.error("Gagal menolak aplikasi"),
+              })
+            }
+          >
+            <X className="h-4 w-4 text-danger" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
-export function MembersAdminPage() {
-  const [tab, setTab] = useState<Tab>("applications");
-  const applications = useMembershipApplications("pending");
-  const { approve, reject } = useApplicationMutations();
-  const members = useMembers();
+  return (
+    <AdminDataTable
+      columns={columns}
+      rows={data ?? []}
+      rowKey={(a) => a.id}
+      isLoading={isLoading}
+      emptyMessage="Tidak ada aplikasi pending."
+    />
+  );
+}
+
+function MembersTab() {
+  const { data, isLoading } = useMembers();
   const updateRole = useUpdateMemberRole();
 
-  const firstError = applications.error ?? members.error;
-  if (firstError instanceof ApiClientError && firstError.status === 403) return <AdminAccessDenied />;
+  const columns: AdminDataTableColumn<MembershipDTO>[] = [
+    {
+      key: "user_id",
+      header: "User ID",
+      render: (m) => <span className="font-mono text-xs text-muted-foreground">{m.user_id.slice(0, 8)}…</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (m) => <Badge variant={m.status === "active" ? "success" : "default"}>{m.status}</Badge>,
+    },
+    {
+      key: "role",
+      header: "Role",
+      render: (m) => (
+        <Select
+          value={m.role}
+          onValueChange={(role) =>
+            updateRole.mutate(
+              { id: m.id, role: role as MembershipDTO["role"] },
+              {
+                onSuccess: () => toast.success("Role diperbarui"),
+                onError: () => toast.error("Gagal memperbarui role"),
+              },
+            )
+          }
+        >
+          <SelectTrigger className="w-32">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="member">Member</SelectItem>
+            <SelectItem value="officer">Officer</SelectItem>
+            <SelectItem value="admin">Admin</SelectItem>
+          </SelectContent>
+        </Select>
+      ),
+    },
+  ];
 
   return (
     <div>
-      <h1 className="text-h2 mb-6">Member</h1>
-
-      <div className="flex gap-1 border-b border-neutral-200 mb-6">
-        <TabButton active={tab === "applications"} onClick={() => setTab("applications")}>
-          Pendaftaran Pending
-        </TabButton>
-        <TabButton active={tab === "members"} onClick={() => setTab("members")}>
-          Daftar Member
-        </TabButton>
-      </div>
-
-      {tab === "applications" && (
-        <AdminDataTable
-          isLoading={applications.isPending}
-          rows={applications.data?.data ?? []}
-          rowKey={(a) => a.id!}
-          emptyMessage="Tidak ada pendaftaran pending."
-          columns={[
-            { key: "name", header: "Nama", render: (a) => a.full_name },
-            { key: "email", header: "Email", render: (a) => a.email },
-            { key: "phone", header: "Telepon", render: (a) => a.phone },
-            {
-              key: "created_at",
-              header: "Tanggal Daftar",
-              render: (a) => (a.created_at ? format(new Date(a.created_at), "d MMM yyyy") : "-"),
-            },
-            {
-              key: "actions",
-              header: "",
-              render: (a) => (
-                <div className="flex gap-1 justify-end">
-                  <button
-                    onClick={() => approve.mutate(a.id!)}
-                    disabled={approve.isPending}
-                    aria-label="Setujui"
-                    className="p-1.5 text-success hover:bg-success/10 rounded-md"
-                  >
-                    <Check size={16} />
-                  </button>
-                  <button
-                    onClick={() => reject.mutate(a.id!)}
-                    disabled={reject.isPending}
-                    aria-label="Tolak"
-                    className="p-1.5 text-danger hover:bg-danger/10 rounded-md"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ),
-              className: "text-right",
-            },
-          ]}
-        />
-      )}
-
-      {tab === "members" && (
-        <AdminDataTable
-          isLoading={members.isPending}
-          rows={members.data?.data ?? []}
-          rowKey={(m) => m.id}
-          columns={[
-            { key: "user_id", header: "User ID", render: (m) => <span className="font-mono text-xs">{m.user_id}</span> },
-            {
-              key: "status",
-              header: "Status",
-              render: (m) => (
-                <AdminStatusBadge tone={m.status === "active" ? "success" : m.status === "banned" ? "danger" : "neutral"}>
-                  {m.status}
-                </AdminStatusBadge>
-              ),
-            },
-            {
-              key: "role",
-              header: "Role",
-              render: (m) => (
-                <select
-                  defaultValue={m.role}
-                  onChange={(e) => updateRole.mutate({ id: m.id, role: e.target.value })}
-                  className="h-8 px-2 rounded border border-neutral-200 text-sm bg-surface"
-                >
-                  {roleOptions.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
-              ),
-            },
-            {
-              key: "joined_at",
-              header: "Bergabung",
-              render: (m) => (m.joined_at ? format(new Date(m.joined_at), "d MMM yyyy") : "-"),
-            },
-          ]}
-        />
-      )}
+      <p className="mb-4 text-xs text-muted-foreground">
+        Kontrak API belum menyertakan nama/email langsung di data member — hanya User ID.
+      </p>
+      <AdminDataTable columns={columns} rows={data ?? []} rowKey={(m) => m.id} isLoading={isLoading} emptyMessage="Belum ada member." />
     </div>
   );
 }
 
-function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+export function MembersAdminPage() {
   return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-        active ? "border-iri-violet text-iri-violet" : "border-transparent text-surface-muted hover:text-surface"
-      }`}
-    >
-      {children}
-    </button>
+    <div>
+      <h1 className="font-display text-h2">Member</h1>
+      <Tabs defaultValue="applications" className="mt-6">
+        <TabsList>
+          <TabsTrigger value="applications">Aplikasi Baru</TabsTrigger>
+          <TabsTrigger value="members">Member Aktif</TabsTrigger>
+        </TabsList>
+        <TabsContent value="applications">
+          <ApplicationsTab />
+        </TabsContent>
+        <TabsContent value="members">
+          <MembersTab />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

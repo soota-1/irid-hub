@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "kickerSuffix": "Komunitas Dance",
+    "subtitle": "Temukan ruang untuk bergerak, belajar, berkolaborasi, dan tumbuh bersama dancer lainnya.",
+    "primaryCta": "Join the Community",
+    "secondaryCta": "Explore Classes"
+  },
+  "snapshot": {
+    "members": "Member",
+    "classes": "Kelas",
+    "events": "Event",
+    "danceStyles": "Gaya Tari"
+  },
+  "doors": {
+    "kicker": "Apa yang terjadi di sini",
+    "title": "Empat pintu masuk ke komunitas",
+    "subtitle": "Tiap bagian punya warna identitasnya sendiri — supaya kamu selalu tahu sedang berada di mana.",
+    "classes": { "title": "Kelas Mingguan", "description": "Delapan style, dari foundation sampai advanced. Datang tanpa audisi." },
+    "events": { "title": "Events & Cypher", "description": "Latihan rutin, kompetisi, dan agenda sosial komunitas." },
+    "community": { "title": "Komunitas", "description": "Cerita, nilai, dan ruang latihan terbuka Iridescent." },
+    "achievements": { "title": "Prestasi", "description": "Milestone komunitas dan pencapaian dancer yang kami rayakan." }
+  },
+  "upcomingEvents": {
+    "kicker": "Events",
+    "title": "Yang akan datang",
+    "viewAll": "Semua event"
+  },
+  "achievements": {
+    "kicker": "Achievements",
+    "title": "Yang kami rayakan bersama"
+  },
+  "gallery": {
+    "kicker": "Gallery",
+    "title": "Dokumentasi komunitas",
+    "viewAll": "Buka galeri"
+  },
+  "stories": {
+    "kicker": "Member Stories",
+    "title": "Kata mereka yang latihan tiap minggu",
+    "items": [
+      { "quote": "Bukan cuma tempat latihan. Di sini aku menemukan orang-orang yang bikin aku berani berkembang.", "name": "Mira Anggraini", "style": "K-Pop / Jazz" },
+      { "quote": "Aku masuk tanpa pengalaman sama sekali. Tiga bulan kemudian aku berani naik panggung.", "name": "Yudha Satria", "style": "Popping" },
+      { "quote": "Yang bikin balik tiap minggu bukan koreografinya, tapi orang-orangnya.", "name": "Sari Lestari", "style": "Contemporary" }
+    ]
+  },
+  "finalCta": {
+    "title": "READY TO MOVE WITH US?",
+    "subtitle": "Temukan komunitas, kelas, dan ruang untuk berkembang bersama.",
+    "cta": "Join the Community"
+  }
+}

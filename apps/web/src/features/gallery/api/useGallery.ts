@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { GalleryItem } from "../types";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { GalleryItemDTO } from "@/shared/types/api";
 
-export function useGallery(eventId?: string, page = 1) {
+export function useGallery(params: { perPage?: number; eventId?: string } = {}) {
+  const apiClient = useApiClient();
+
   return useQuery({
-    queryKey: ["gallery", eventId, page],
+    queryKey: ["gallery", params],
     queryFn: async () => {
-      const q = new URLSearchParams({ page: String(page), per_page: "30" });
-      if (eventId) q.set("event_id", eventId);
-      return apiClient.get<GalleryItem[]>(`/gallery?${q.toString()}`);
+      const { data } = await apiClient<GalleryItemDTO[]>("/gallery", {
+        query: { per_page: params.perPage, event_id: params.eventId },
+      });
+      return data;
     },
   });
 }

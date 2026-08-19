@@ -1,39 +1,35 @@
-import type { ReactNode } from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/shared/lib/cn";
+import { useEffect, useRef, type ReactNode } from "react";
+import { fadeUpStagger } from "@/shared/lib/gsap";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
 
-const container = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.05 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
-};
-
-/** Staggers its children in as they scroll into view — Design.md §6
- * ("List event/galeri muncul: Stagger children, delay 40–60ms per item"). */
-export function StaggerReveal({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-60px" }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+interface StaggerRevealProps {
+  children: ReactNode;
+  className?: string;
+  /** Selector (relative to the wrapper) for the items to stagger, e.g. "> *" */
+  itemSelector?: string;
+  staggerMs?: number;
 }
 
-export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
+/** Wraps a list/grid and fades+slides its children up on scroll-into-view,
+ * staggered 40-60ms apart (Design.md §6). No-op under reduced motion. */
+export function StaggerReveal({ children, className, itemSelector = ":scope > *", staggerMs = 50 }: StaggerRevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reducedMotion || !ref.current) return;
+    const items = ref.current.querySelectorAll(itemSelector);
+    if (items.length === 0) return;
+    const ctx = fadeUpStagger(items, ref.current, staggerMs);
+    return () => {
+      ctx.scrollTrigger?.kill();
+      ctx.kill();
+    };
+  }, [reducedMotion, itemSelector, staggerMs]);
+
   return (
-    <motion.div variants={item} className={cn(className)}>
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }

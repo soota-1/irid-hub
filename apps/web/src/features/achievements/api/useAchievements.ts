@@ -1,10 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { Achievement } from "../types";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { AchievementDTO } from "@/shared/types/api";
 
-export function useAchievements(page = 1) {
+export function useAchievements(perPage = 50) {
+  const apiClient = useApiClient();
+
   return useQuery({
-    queryKey: ["achievements", page],
-    queryFn: async () => apiClient.get<Achievement[]>(`/achievements?page=${page}&per_page=30`),
+    queryKey: ["achievements", perPage],
+    queryFn: async () => {
+      const { data } = await apiClient<AchievementDTO[]>("/achievements", { query: { per_page: perPage } });
+      return data;
+    },
   });
 }

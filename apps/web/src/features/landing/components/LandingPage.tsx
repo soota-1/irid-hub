@@ -1,22 +1,23 @@
-import { useCommunity } from "@/features/community-profile";
 import { Hero } from "./Hero";
-import { HighlightSection } from "./HighlightSection";
-import { AchievementCarousel } from "./AchievementCarousel";
+import { CommunitySnapshot } from "./CommunitySnapshot";
+import { FeatureDoors } from "./FeatureDoors";
+import { UpcomingEventsSection } from "./UpcomingEventsSection";
+import { AchievementShowcase } from "./AchievementShowcase";
 import { GalleryPreviewSection } from "./GalleryPreviewSection";
-import { TestimonialSection } from "./TestimonialSection";
-import { StickyJoinCta } from "./StickyJoinCta";
+import { MemberStories } from "./MemberStories";
+import { FinalCta } from "./FinalCta";
 
 export function LandingPage() {
-  const { data: community } = useCommunity();
-
   return (
-    <div>
-      <Hero communityName={community?.name ?? undefined} />
-      <HighlightSection />
-      <AchievementCarousel />
+    <>
+      <Hero />
+      <CommunitySnapshot />
+      <FeatureDoors />
+      <UpcomingEventsSection />
+      <AchievementShowcase />
       <GalleryPreviewSection />
-      <TestimonialSection />
-      <StickyJoinCta />
-    </div>
+      <MemberStories />
+      <FinalCta />
+    </>
   );
 }

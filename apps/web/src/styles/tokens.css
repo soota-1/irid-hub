@@ -1,37 +1,37 @@
 /**
- * Design tokens — source of truth, mirrors docs/Design.md §2–§4.
- * Also exported (as JSON) to packages/ui-tokens so Flutter can share the
- * same palette/spacing — see docs/Design.md §9.
+ * Design tokens — source of truth mirrors docs/Design.md §2.
+ * Dark (neutral-950) is the default; light is opt-in via [data-theme="light"].
+ * Also exported (as JSON/CSS) to packages/ui-tokens so Flutter can share
+ * the same palette — see docs/Design.md §9.
  */
 :root {
-  /* Netral (dominan untuk teks & surface) */
-  --neutral-950: #14121a;
-  --neutral-800: #2b2733;
-  --neutral-500: #6e6779;
-  --neutral-200: #e7e3ee;
-  --neutral-50: #fbfafe;
+  /* Netral (skala dasar) */
+  --n-950: oklch(19% 0.024 300);
+  --n-800: oklch(30% 0.02 300);
+  --n-500: oklch(53% 0.024 300);
+  --n-200: oklch(92% 0.012 300);
+  --n-50: oklch(98.5% 0.005 300);
 
-  /* Spektrum Iridescent — dipakai bergantian per section/fitur */
-  --iri-violet: #8b5cf6;
-  --iri-magenta: #ec4899;
-  --iri-coral: #fb7185;
-  --iri-amber: #fbbf24;
-  --iri-mint: #34d399;
-  --iri-cyan: #22d3ee;
-  --iri-azure: #60a5fa;
+  /* Spektrum Iridescent */
+  --iri-violet: oklch(62% 0.22 295);
+  --iri-magenta: oklch(65% 0.24 350);
+  --iri-coral: oklch(70% 0.17 15);
+  --iri-amber: oklch(83% 0.16 84);
+  --iri-mint: oklch(77% 0.14 163);
+  --iri-cyan: oklch(79% 0.13 205);
+  --iri-azure: oklch(70% 0.15 258);
 
-  /* Gradient mesh utama (hero, header admin, badge highlight) */
   --gradient-iridescent: linear-gradient(
-    120deg,
+    100deg,
     var(--iri-violet) 0%,
-    var(--iri-magenta) 25%,
-    var(--iri-coral) 45%,
-    var(--iri-amber) 65%,
-    var(--iri-mint) 85%,
+    var(--iri-magenta) 22%,
+    var(--iri-coral) 42%,
+    var(--iri-amber) 60%,
+    var(--iri-mint) 80%,
     var(--iri-cyan) 100%
   );
 
-  /* Identitas per fitur (Design.md §2) */
+  /* Identitas per fitur */
   --gradient-events: linear-gradient(120deg, var(--iri-violet) 0%, var(--iri-magenta) 100%);
   --gradient-schedules: linear-gradient(120deg, var(--iri-cyan) 0%, var(--iri-azure) 100%);
   --gradient-achievements: linear-gradient(120deg, var(--iri-amber) 0%, var(--iri-coral) 100%);
@@ -40,29 +40,39 @@
   /* Semantic */
   --success: var(--iri-mint);
   --warning: var(--iri-amber);
-  --danger: #f43f5e;
+  --danger: oklch(63% 0.21 25);
   --info: var(--iri-azure);
 
-  /* Surface (light) */
-  --surface: var(--neutral-50);
-  --surface-text: var(--neutral-800);
-  --surface-text-muted: var(--neutral-500);
-
-  /* Radius (Design.md §4) */
-  --radius-lg: 24px;
-  --radius-md: 12px;
+  /* Token semantic shadcn/ui — dark = default */
+  --radius: 0.75rem;
+  --background: var(--n-950);
+  --foreground: var(--n-50);
+  --card: oklch(23.5% 0.022 300);
+  --card-foreground: var(--n-50);
+  --popover: oklch(23.5% 0.022 300);
+  --popover-foreground: var(--n-50);
+  --primary: var(--n-50);
+  --primary-foreground: var(--n-950);
+  --secondary: oklch(28% 0.02 300);
+  --secondary-foreground: var(--n-50);
+  --muted: oklch(28% 0.02 300);
+  --muted-foreground: oklch(76% 0.02 300);
+  --border: oklch(1 0 0 / 0.12);
+  --ring: var(--iri-violet);
 }
 
-:root[data-theme="dark"] {
-  --surface: var(--neutral-950);
-  --surface-text: var(--neutral-50);
-  --surface-text-muted: var(--neutral-200);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --surface: var(--neutral-950);
-    --surface-text: var(--neutral-50);
-    --surface-text-muted: var(--neutral-200);
-  }
+:root[data-theme="light"] {
+  --background: var(--n-50);
+  --foreground: var(--n-950);
+  --card: oklch(100% 0 0);
+  --card-foreground: var(--n-950);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: var(--n-950);
+  --primary: var(--n-950);
+  --primary-foreground: var(--n-50);
+  --secondary: var(--n-200);
+  --secondary-foreground: var(--n-950);
+  --muted: var(--n-200);
+  --muted-foreground: var(--n-500);
+  --border: oklch(0 0 0 / 0.1);
 }

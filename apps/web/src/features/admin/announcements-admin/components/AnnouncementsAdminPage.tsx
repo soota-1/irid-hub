@@ -1,86 +1,67 @@
 import { useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-import { AdminDataTable, AdminAccessDenied, AdminStatusBadge, Button, Modal } from "@/shared/components";
-import { ApiClientError } from "@/shared/lib/apiClient";
-import type { Announcement } from "@/features/announcements";
-import { useAnnouncementsAdmin, useAnnouncementMutations, type AnnouncementFormValues } from "../api/useAnnouncementsAdmin";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { AdminDataTable, type AdminDataTableColumn } from "@/shared/components";
+import type { AnnouncementDTO } from "@/shared/types/api";
+import { useAnnouncementsAdmin, useDeleteAnnouncement } from "../api/useAnnouncementsAdmin";
 import { AnnouncementForm } from "./AnnouncementForm";
 
 export function AnnouncementsAdminPage() {
-  const { data, isPending, isError, error } = useAnnouncementsAdmin();
-  const { create, update, remove } = useAnnouncementMutations();
-  const [editing, setEditing] = useState<Announcement | null | "new">(null);
+  const { data, isLoading } = useAnnouncementsAdmin();
+  const deleteAnnouncement = useDeleteAnnouncement();
+  const [editing, setEditing] = useState<AnnouncementDTO | null | undefined>(undefined);
 
-  if (isError && error instanceof ApiClientError && error.status === 403) return <AdminAccessDenied />;
-
-  const announcements = data?.data ?? [];
-
-  function handleSubmit(values: AnnouncementFormValues) {
-    if (editing === "new") create.mutate(values, { onSuccess: () => setEditing(null) });
-    else if (editing) update.mutate({ id: editing.id!, values }, { onSuccess: () => setEditing(null) });
-  }
+  const columns: AdminDataTableColumn<AnnouncementDTO>[] = [
+    { key: "title", header: "Judul", render: (a) => <span className="font-medium">{a.title}</span> },
+    { key: "urgency", header: "Urgensi", render: (a) => a.urgency },
+    { key: "visibility", header: "Visibilitas", render: (a) => (a.visibility === "public" ? "Publik" : "Member") },
+    {
+      key: "status",
+      header: "Status",
+      render: (a) => <Badge variant={a.published_at ? "success" : "default"}>{a.published_at ? "Terbit" : "Draft"}</Badge>,
+    },
+    {
+      key: "actions",
+      header: "",
+      className: "text-right",
+      render: (a) => (
+        <div className="flex justify-end gap-1">
+          <Button variant="ghost" size="icon" aria-label="Edit" onClick={() => setEditing(a)}>
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Hapus"
+            onClick={() => {
+              if (!window.confirm(`Hapus pengumuman "${a.title}"?`)) return;
+              deleteAnnouncement.mutate(a.id, {
+                onSuccess: () => toast.success("Pengumuman dihapus"),
+                onError: () => toast.error("Gagal menghapus pengumuman"),
+              });
+            }}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-h2">Pengumuman</h1>
-        <Button size="sm" onClick={() => setEditing("new")}>
-          <Plus size={16} className="mr-1.5" /> Tambah Pengumuman
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-h2">Pengumuman</h1>
+        <Button variant="gradient" onClick={() => setEditing(null)}>
+          <Plus className="h-4 w-4" /> Pengumuman Baru
         </Button>
       </div>
-
-      <AdminDataTable
-        isLoading={isPending}
-        rows={announcements}
-        rowKey={(a) => a.id!}
-        columns={[
-          { key: "title", header: "Judul", render: (a) => a.title },
-          { key: "urgency", header: "Urgensi", render: (a) => a.urgency },
-          { key: "visibility", header: "Visibilitas", render: (a) => (a.visibility === "public" ? "Publik" : "Member") },
-          {
-            key: "status",
-            header: "Status",
-            render: (a) => (
-              <AdminStatusBadge tone={a.published_at ? "success" : "neutral"}>
-                {a.published_at ? "Published" : "Draft"}
-              </AdminStatusBadge>
-            ),
-          },
-          {
-            key: "actions",
-            header: "",
-            render: (a) => (
-              <div className="flex gap-1 justify-end">
-                <button onClick={() => setEditing(a)} aria-label="Edit" className="p-1.5 hover:text-iri-violet">
-                  <Pencil size={16} />
-                </button>
-                <button
-                  onClick={() => {
-                    if (confirm(`Hapus pengumuman "${a.title}"?`)) remove.mutate(a.id!);
-                  }}
-                  aria-label="Hapus"
-                  className="p-1.5 hover:text-danger"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ),
-            className: "text-right",
-          },
-        ]}
-      />
-
-      <Modal
-        open={editing !== null}
-        onClose={() => setEditing(null)}
-        title={editing === "new" ? "Tambah Pengumuman" : "Edit Pengumuman"}
-      >
-        <AnnouncementForm
-          initial={editing !== "new" ? (editing ?? undefined) : undefined}
-          onSubmit={handleSubmit}
-          submitting={create.isPending || update.isPending}
-        />
-      </Modal>
+      <div className="mt-6">
+        <AdminDataTable columns={columns} rows={data ?? []} rowKey={(a) => a.id} isLoading={isLoading} />
+      </div>
+      <AnnouncementForm announcement={editing ?? null} open={editing !== undefined} onOpenChange={(open) => !open && setEditing(undefined)} />
     </div>
   );
 }

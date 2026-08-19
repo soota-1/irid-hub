@@ -1,5 +1,3 @@
-import type { components } from "@irid-hub/shared-types";
+export type { TrainingScheduleDTO } from "@/shared/types/api";
 
-export type TrainingSchedule = components["schemas"]["handler.trainingScheduleDTO"];
-
-export const dayLabels = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+export const DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"] as const;

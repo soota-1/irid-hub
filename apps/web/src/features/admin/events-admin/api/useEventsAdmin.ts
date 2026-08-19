@@ -1,58 +1,61 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { EventItem } from "@/features/events";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { EventDTO } from "@/shared/types/api";
 
-export interface EventFormValues {
+export interface UpsertEventInput {
   title: string;
-  description: string;
-  category: string;
-  location: string;
+  description?: string;
+  category: EventDTO["category"];
+  location?: string;
   start_at: string;
   end_at: string;
-  cover_image_url: string;
+  cover_image_url?: string;
   is_public: boolean;
 }
 
 export function useEventsAdmin() {
-  const { getToken } = useAuth();
+  const apiClient = useApiClient();
+
   return useQuery({
     queryKey: ["admin", "events"],
     queryFn: async () => {
-      const token = await getToken();
-      return apiClient.get<EventItem[]>("/admin/events?per_page=100", { token });
+      const { data } = await apiClient<EventDTO[]>("/admin/events", { query: { per_page: 100 } });
+      return data;
     },
   });
 }
 
-export function useEventMutations() {
-  const { getToken } = useAuth();
+export function useCreateEvent() {
+  const apiClient = useApiClient();
   const queryClient = useQueryClient();
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "events"] });
-
-  const create = useMutation({
-    mutationFn: async (values: EventFormValues) => {
-      const token = await getToken();
-      return apiClient.post<EventItem>("/events", values, { token });
+  return useMutation({
+    mutationFn: async (input: UpsertEventInput) => {
+      const { data } = await apiClient<EventDTO>("/events", { method: "POST", body: input });
+      return data;
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "events"] }),
   });
+}
 
-  const update = useMutation({
-    mutationFn: async ({ id, values }: { id: string; values: EventFormValues }) => {
-      const token = await getToken();
-      return apiClient.patch<EventItem>(`/events/${id}`, values, { token });
+export function useUpdateEvent() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...input }: UpsertEventInput & { id: string }) => {
+      const { data } = await apiClient<EventDTO>(`/events/${id}`, { method: "PATCH", body: input });
+      return data;
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "events"] }),
   });
+}
 
-  const remove = useMutation({
+export function useDeleteEvent() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async (id: string) => {
-      const token = await getToken();
-      return apiClient.delete(`/events/${id}`, { token });
+      await apiClient(`/events/${id}`, { method: "DELETE" });
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "events"] }),
   });
-
-  return { create, update, remove };
 }

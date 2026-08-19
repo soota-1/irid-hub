@@ -1,44 +1,58 @@
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { KickerLabel, GradientMesh, LazyImage } from "@/shared/components";
 import { useCommunity } from "../api/useCommunity";
-import { Skeleton } from "@/shared/components";
 
 export function CommunityProfilePage() {
-  const { data: community, isPending, isError } = useCommunity();
+  const { data: community, isLoading } = useCommunity();
+  const { t } = useTranslation("community");
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-4xl px-5 py-16">
+        <Skeleton className="h-64 w-full rounded-lg" />
+        <Skeleton className="mt-6 h-8 w-1/2" />
+        <Skeleton className="mt-4 h-32 w-full" />
+      </div>
+    );
+  }
+
+  if (!community) return null;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
-      {isPending && (
-        <div className="space-y-4">
-          <Skeleton className="h-10 w-2/3" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-4/6" />
+    <div>
+      <div className="relative overflow-hidden border-b border-border">
+        <GradientMesh className="opacity-20" />
+        {community.cover_image_url && (
+          <LazyImage src={community.cover_image_url} alt="" wrapperClassName="h-64 w-full sm:h-80" />
+        )}
+        <div className="relative mx-auto max-w-4xl px-5 py-12">
+          <KickerLabel>{t("kicker")}</KickerLabel>
+          <h1 className="mt-3 font-display text-h1">{community.name}</h1>
+          {community.tagline && <p className="mt-2 text-body-lg text-muted-foreground">{community.tagline}</p>}
         </div>
-      )}
+      </div>
 
-      {isError && <p className="text-danger">Gagal memuat profil komunitas. Coba muat ulang halaman.</p>}
+      <div className="mx-auto max-w-4xl px-5 py-12">
+        {community.description ? (
+          <article className="prose prose-invert max-w-none text-foreground/90">
+            <ReactMarkdown>{community.description}</ReactMarkdown>
+          </article>
+        ) : (
+          <p className="text-muted-foreground">{t("storyPlaceholder")}</p>
+        )}
 
-      {community && (
-        <>
-          {community.cover_image_url && (
-            <img
-              src={community.cover_image_url}
-              alt=""
-              className="w-full aspect-[3/1] object-cover rounded-lg mb-8"
-            />
-          )}
-          <h1 className="text-h1">{community.name}</h1>
-          {community.tagline && <p className="text-body-lg text-surface-muted mt-2">{community.tagline}</p>}
-
-          {community.description ? (
-            <div className="prose prose-neutral max-w-none mt-8">
-              <ReactMarkdown>{community.description}</ReactMarkdown>
-            </div>
-          ) : (
-            <p className="text-surface-muted mt-8">Profil komunitas belum dilengkapi.</p>
-          )}
-        </>
-      )}
+        <div className="mt-10 rounded-lg border border-border bg-card p-8 text-center">
+          <h2 className="font-display text-h3">{t("ctaTitle")}</h2>
+          <p className="mt-2 text-muted-foreground">{t("ctaSubtitle")}</p>
+          <Button variant="gradient" asChild className="mt-5">
+            <Link to="/gabung">{t("ctaButton")}</Link>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
