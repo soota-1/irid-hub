@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "kelas": "Kelas",
+    "events": "Events",
+    "galeri": "Galeri",
+    "prestasi": "Prestasi",
+    "komunitas": "Komunitas",
+    "pengumuman": "Pengumuman"
+  },
+  "joinCommunity": "Gabung Komunitas",
+  "themeToggle": {
+    "toLight": "Ganti ke mode terang",
+    "toDark": "Ganti ke mode gelap"
+  },
+  "languageToggle": {
+    "toEnglish": "Ganti ke Bahasa Inggris",
+    "toIndonesian": "Ganti ke Bahasa Indonesia"
+  },
+  "openMenu": "Buka menu",
+  "navMenuTitle": "Menu navigasi",
+  "footer": {
+    "copyright": "© {{year}} Iridescent. Dibangun dengan gerak, cahaya, dan komunitas.",
+    "instagramAria": "Instagram Iridescent"
+  },
+  "notFound": {
+    "kicker": "404",
+    "title": "Halaman tidak ditemukan",
+    "description": "Halaman yang kamu cari mungkin sudah pindah atau tidak pernah ada."
+  },
+  "backToHome": "Kembali ke beranda",
+  "lightbox": {
+    "close": "Tutup",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya"
+  }
+}

@@ -1,157 +1,110 @@
-import { useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import confetti from "canvas-confetti";
-import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
-import { Button } from "@/shared/components";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { KickerLabel, GradientMesh } from "@/shared/components";
 import { useSubmitApplication } from "../api/useSubmitApplication";
-import { ApiClientError } from "@/shared/lib/apiClient";
+import { MembershipSuccessScene } from "./MembershipSuccessScene";
 
-const schema = z.object({
-  full_name: z.string().min(2, "Nama minimal 2 karakter"),
-  email: z.string().email("Format email tidak valid"),
-  phone: z.string().min(8, "Nomor telepon minimal 8 digit"),
-  motivation: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof schema>;
-
-// Iridescent palette — Design.md §2, so the confetti stays on-brand instead
-// of default red/green/blue.
-const CONFETTI_COLORS = ["#8B5CF6", "#EC4899", "#FB7185", "#FBBF24", "#34D399", "#22D3EE"];
-
-function fireConfetti() {
-  confetti({
-    particleCount: 90,
-    spread: 70,
-    origin: { y: 0.6 },
-    colors: CONFETTI_COLORS,
-    disableForReducedMotion: true,
+/** Validation messages must re-localize when the language toggles, so the
+ * schema is built from `t` inside the component (memoized on language)
+ * rather than as a module-level constant. */
+function buildSchema(t: (key: string) => string) {
+  return z.object({
+    full_name: z.string().min(2, t("join.errors.fullName")),
+    email: z.string().email(t("join.errors.email")),
+    phone: z.string().min(8, t("join.errors.phone")),
+    motivation: z.string().max(1000).optional(),
   });
 }
 
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
+
+/** Registration collects only what the API accepts
+ * (`submitMembershipApplicationRequest`: full_name/email/phone/motivation)
+ * — the richer field set in uiux.md §14 (age, dance style, Instagram) has
+ * no backing column in `membership_applications` (Schema.md §2.4), so it's
+ * deliberately left out rather than collected and silently dropped. */
 export function MembershipFormPage() {
+  const [succeeded, setSucceeded] = useState(false);
+  const submit = useSubmitApplication();
+  const { t } = useTranslation("membership");
+  const schema = useMemo(() => buildSchema(t), [t]);
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
-  const submitApplication = useSubmitApplication();
 
-  async function onSubmit(values: FormValues) {
-    try {
-      await submitApplication.mutateAsync(values);
-      fireConfetti();
-    } catch (err) {
-      if (err instanceof ApiClientError && err.fields) {
-        for (const [field, message] of Object.entries(err.fields)) {
-          setError(field as keyof FormValues, { message });
-        }
-      } else if (err instanceof ApiClientError) {
-        setError("root", { message: err.message });
-      }
-    }
+  useEffect(() => {
+    if (!succeeded) return;
+    confetti({
+      particleCount: 90,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ["#8b5cf6", "#ec4899", "#fbbf24", "#22d3ee"],
+    });
+  }, [succeeded]);
+
+  function onSubmit(values: FormValues) {
+    submit.mutate(values, { onSuccess: () => setSucceeded(true) });
   }
 
-  if (submitApplication.isSuccess) {
+  if (succeeded) {
     return (
-      <div className="mx-auto max-w-md px-4 py-24 text-center">
-        <motion.div
-          initial={{ scale: 0.6, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        >
-          <CheckCircle2 size={64} className="mx-auto text-success" />
-        </motion.div>
-        <h1 className="text-h2 mt-6">Pendaftaran Terkirim!</h1>
-        <p className="text-surface-muted mt-2">
-          Terima kasih sudah mendaftar. Tim kami akan meninjau pendaftaranmu dan menghubungi lewat email.
-        </p>
+      <div className="mx-auto flex max-w-md flex-col items-center gap-4 px-5 py-24 text-center">
+        <MembershipSuccessScene />
+        <h1 className="font-display text-h2">{t("join.successTitle")}</h1>
+        <p className="text-muted-foreground">{t("join.successBody")}</p>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-md px-4 sm:px-6 py-16">
-      <h1 className="text-h1">Gabung Komunitas</h1>
-      <p className="text-surface-muted mt-1">Isi form di bawah, tim kami akan meninjau pendaftaranmu.</p>
+    <div className="relative overflow-hidden">
+      <GradientMesh className="opacity-20" />
+      <div className="relative mx-auto max-w-xl px-5 py-16">
+        <KickerLabel>{t("join.kicker")}</KickerLabel>
+        <h1 className="mt-3 font-display text-h1">{t("join.title")}</h1>
+        <p className="mt-3 text-body-lg text-muted-foreground">{t("join.subtitle")}</p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5" noValidate>
-        <div>
-          <label htmlFor="full_name" className="block text-sm font-medium mb-1.5">
-            Nama Lengkap
-          </label>
-          <input
-            id="full_name"
-            {...register("full_name")}
-            className="w-full h-11 px-3.5 rounded-md border border-neutral-200 bg-surface text-surface"
-            aria-invalid={!!errors.full_name}
-            aria-describedby={errors.full_name ? "full_name-error" : undefined}
-          />
-          {errors.full_name && (
-            <p id="full_name-error" className="text-caption text-danger mt-1">
-              {errors.full_name.message}
-            </p>
-          )}
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-10 flex flex-col gap-5">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="full_name">{t("join.fields.fullName")}</Label>
+            <Input id="full_name" {...register("full_name")} />
+            {errors.full_name && <p className="text-xs text-danger">{errors.full_name.message}</p>}
+          </div>
 
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1.5">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            {...register("email")}
-            className="w-full h-11 px-3.5 rounded-md border border-neutral-200 bg-surface text-surface"
-            aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? "email-error" : undefined}
-          />
-          {errors.email && (
-            <p id="email-error" className="text-caption text-danger mt-1">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="email">{t("join.fields.email")}</Label>
+            <Input id="email" type="email" {...register("email")} />
+            {errors.email && <p className="text-xs text-danger">{errors.email.message}</p>}
+          </div>
 
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium mb-1.5">
-            Nomor Telepon / WhatsApp
-          </label>
-          <input
-            id="phone"
-            {...register("phone")}
-            className="w-full h-11 px-3.5 rounded-md border border-neutral-200 bg-surface text-surface"
-            aria-invalid={!!errors.phone}
-            aria-describedby={errors.phone ? "phone-error" : undefined}
-          />
-          {errors.phone && (
-            <p id="phone-error" className="text-caption text-danger mt-1">
-              {errors.phone.message}
-            </p>
-          )}
-        </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="phone">{t("join.fields.phone")}</Label>
+            <Input id="phone" type="tel" {...register("phone")} />
+            {errors.phone && <p className="text-xs text-danger">{errors.phone.message}</p>}
+          </div>
 
-        <div>
-          <label htmlFor="motivation" className="block text-sm font-medium mb-1.5">
-            Kenapa mau gabung? <span className="text-surface-muted font-normal">(opsional)</span>
-          </label>
-          <textarea
-            id="motivation"
-            rows={4}
-            {...register("motivation")}
-            className="w-full px-3.5 py-2.5 rounded-md border border-neutral-200 bg-surface text-surface resize-none"
-          />
-        </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="motivation">{t("join.fields.motivation")}</Label>
+            <Textarea id="motivation" rows={4} {...register("motivation")} />
+          </div>
 
-        {errors.root && <p className="text-danger text-sm">{errors.root.message}</p>}
+          {submit.isError && <p className="text-sm text-danger">{t("join.errors.submitFailed")}</p>}
 
-        <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Mengirim..." : "Kirim Pendaftaran"}
-        </Button>
-      </form>
+          <Button type="submit" variant="gradient" size="lg" disabled={isSubmitting} className="mt-2 p-2">
+            {isSubmitting ? t("join.submitting") : t("join.submit")}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,1 @@
-import type { components } from "@irid-hub/shared-types";
-
-export type Achievement = components["schemas"]["handler.achievementDTO"];
+export type { AchievementDTO } from "@/shared/types/api";

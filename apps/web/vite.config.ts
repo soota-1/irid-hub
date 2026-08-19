@@ -13,4 +13,17 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  build: {
+    // three.js + @react-three/fiber + drei are inherently heavy; isolated
+    // into their own chunk above so only hero/success-moment routes pay
+    // for it (Design.md §19 — 3D stays scoped to those two spots).
+    chunkSizeWarningLimit: 1100,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ["three", "@react-three/fiber", "@react-three/drei"],
+        },
+      },
+    },
+  },
 });

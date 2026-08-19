@@ -1,49 +1,50 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { EventItem } from "../types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { EventDTO } from "@/shared/types/api";
+import type { RsvpStatus } from "@/shared/lib/rsvpStatus";
 
-export interface UseEventsParams {
+interface UseEventsParams {
   from?: string;
   to?: string;
   page?: number;
   perPage?: number;
 }
 
-function buildQuery(params: UseEventsParams): string {
-  const q = new URLSearchParams();
-  if (params.from) q.set("from", params.from);
-  if (params.to) q.set("to", params.to);
-  q.set("page", String(params.page ?? 1));
-  q.set("per_page", String(params.perPage ?? 100));
-  return q.toString();
-}
-
 export function useEvents(params: UseEventsParams = {}) {
+  const apiClient = useApiClient();
+
   return useQuery({
     queryKey: ["events", params],
-    queryFn: async () => apiClient.get<EventItem[]>(`/events?${buildQuery(params)}`),
+    queryFn: async () => {
+      const { data, meta } = await apiClient<EventDTO[]>("/events", {
+        query: { from: params.from, to: params.to, page: params.page, per_page: params.perPage },
+      });
+      return { items: data, meta };
+    },
   });
 }
 
-export function useEvent(id: string | null) {
+export function useEvent(id: string | undefined) {
+  const apiClient = useApiClient();
+
   return useQuery({
     queryKey: ["events", id],
-    queryFn: async () => (await apiClient.get<EventItem>(`/events/${id}`)).data,
-    enabled: !!id,
+    queryFn: async () => {
+      const { data } = await apiClient<EventDTO>(`/events/${id}`);
+      return data;
+    },
+    enabled: Boolean(id),
   });
 }
 
-export type RsvpStatus = "going" | "not_going" | "maybe";
-
-export function useRsvp(eventId: string) {
-  const { getToken } = useAuth();
+export function useRsvpEvent(eventId: string) {
+  const apiClient = useApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (status: RsvpStatus) => {
-      const token = await getToken();
-      return apiClient.post(`/events/${eventId}/rsvp`, { status }, { token });
+      const { data } = await apiClient(`/events/${eventId}/rsvp`, { method: "POST", body: { status } });
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });

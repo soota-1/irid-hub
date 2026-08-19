@@ -1,96 +1,56 @@
-import { useMemo, useState } from "react";
-import { endOfMonth, startOfMonth } from "date-fns";
-import { CalendarDays, List } from "lucide-react";
-import { cn } from "@/shared/lib/cn";
-import { Skeleton, StaggerReveal, StaggerItem } from "@/shared/components";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { KickerLabel, EventCard, StaggerReveal } from "@/shared/components";
 import { useEvents } from "../api/useEvents";
 import { EventCalendar } from "./EventCalendar";
-import { EventCard } from "./EventCard";
 import { EventDetailPanel } from "./EventDetailPanel";
-import type { EventItem } from "../types";
-
-type ViewMode = "calendar" | "list";
+import type { EventDTO } from "../types";
 
 export function EventsPage() {
-  const [view, setView] = useState<ViewMode>("list");
-  const [range, setRange] = useState(() => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }));
-  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
+  const { data, isLoading } = useEvents({ perPage: 100 });
+  const [selected, setSelected] = useState<EventDTO | null>(null);
+  const { t } = useTranslation("events");
 
-  const params = useMemo(
-    () => (view === "calendar" ? { from: range.from.toISOString(), to: range.to.toISOString() } : {}),
-    [view, range],
-  );
-  const { data, isPending, isError } = useEvents(params);
-  const events = data?.data ?? [];
+  const events = data?.items ?? [];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-h1">Kalender Event</h1>
-          <p className="text-surface-muted mt-1">Jangan sampai ketinggalan kegiatan komunitas.</p>
-        </div>
-        <div className="flex rounded-md border border-neutral-200 p-1" role="tablist" aria-label="Tampilan event">
-          <button
-            role="tab"
-            aria-selected={view === "list"}
-            onClick={() => setView("list")}
-            className={cn(
-              "h-9 px-3 rounded text-sm font-medium flex items-center gap-1.5 transition-colors",
-              view === "list" ? "bg-iri-violet text-white" : "text-surface-muted",
-            )}
-          >
-            <List size={16} /> List
-          </button>
-          <button
-            role="tab"
-            aria-selected={view === "calendar"}
-            onClick={() => setView("calendar")}
-            className={cn(
-              "h-9 px-3 rounded text-sm font-medium flex items-center gap-1.5 transition-colors",
-              view === "calendar" ? "bg-iri-violet text-white" : "text-surface-muted",
-            )}
-          >
-            <CalendarDays size={16} /> Kalender
-          </button>
-        </div>
-      </div>
+    <div className="mx-auto max-w-6xl px-5 py-16">
+      <KickerLabel>{t("kicker")}</KickerLabel>
+      <h1 className="mt-3 font-display text-h1">{t("title")}</h1>
+      <p className="mt-3 max-w-2xl text-body-lg text-muted-foreground">{t("subtitle")}</p>
 
-      {isError && <p className="text-danger">Gagal memuat event. Coba muat ulang halaman.</p>}
+      <Tabs defaultValue="list" className="mt-10">
+        <TabsList>
+          <TabsTrigger value="list">{t("tabs.list")}</TabsTrigger>
+          <TabsTrigger value="calendar">{t("tabs.calendar")}</TabsTrigger>
+        </TabsList>
 
-      {isPending && (
-        <div className="grid sm:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-36" />
-          ))}
-        </div>
-      )}
-
-      {!isPending && view === "list" && (
-        <>
-          {events.length === 0 ? (
-            <p className="text-surface-muted">Belum ada event mendatang.</p>
+        <TabsContent value="list">
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-72 w-full rounded-lg" />
+              ))}
+            </div>
+          ) : events.length === 0 ? (
+            <p className="py-12 text-center text-muted-foreground">{t("empty")}</p>
           ) : (
-            <StaggerReveal className="grid sm:grid-cols-2 gap-4">
+            <StaggerReveal className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {events.map((event) => (
-                <StaggerItem key={event.id}>
-                  <EventCard event={event} onClick={() => setSelectedEvent(event)} />
-                </StaggerItem>
+                <EventCard key={event.id} event={event} onClick={() => setSelected(event)} />
               ))}
             </StaggerReveal>
           )}
-        </>
-      )}
+        </TabsContent>
 
-      {!isPending && view === "calendar" && (
-        <EventCalendar
-          events={events}
-          onSelectEvent={setSelectedEvent}
-          onMonthChange={(month) => setRange({ from: startOfMonth(month), to: endOfMonth(month) })}
-        />
-      )}
+        <TabsContent value="calendar">
+          <EventCalendar events={events} onSelectEvent={setSelected} />
+        </TabsContent>
+      </Tabs>
 
-      <EventDetailPanel event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+      <EventDetailPanel event={selected} onOpenChange={(open) => !open && setSelected(null)} />
     </div>
   );
 }

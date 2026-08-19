@@ -1,3 +1,3 @@
 export { EventsPage } from "./components/EventsPage";
-export { useEvents, useEvent, useRsvp } from "./api/useEvents";
-export type { EventItem } from "./types";
+export { useEvents, useEvent, useRsvpEvent } from "./api/useEvents";
+export type { EventDTO } from "./types";

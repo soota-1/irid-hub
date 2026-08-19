@@ -1,79 +1,60 @@
 import { useState } from "react";
-import { format } from "date-fns";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-import { useAchievements } from "@/features/achievements";
-import type { Achievement } from "@/features/achievements";
-import { AdminDataTable, Button, Modal } from "@/shared/components";
-import { useAchievementMutations, type AchievementFormValues } from "../api/useAchievementsAdmin";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { AdminDataTable, type AdminDataTableColumn } from "@/shared/components";
+import type { AchievementDTO } from "@/shared/types/api";
+import { useAchievementsAdmin, useDeleteAchievement } from "../api/useAchievementsAdmin";
 import { AchievementForm } from "./AchievementForm";
 
 export function AchievementsAdminPage() {
-  const { data, isPending } = useAchievements();
-  const { create, update, remove } = useAchievementMutations();
-  const [editing, setEditing] = useState<Achievement | null | "new">(null);
+  const { data, isLoading } = useAchievementsAdmin();
+  const deleteAchievement = useDeleteAchievement();
+  const [editing, setEditing] = useState<AchievementDTO | null | undefined>(undefined);
 
-  const achievements = data?.data ?? [];
-
-  function handleSubmit(values: AchievementFormValues) {
-    if (editing === "new") create.mutate(values, { onSuccess: () => setEditing(null) });
-    else if (editing) update.mutate({ id: editing.id!, values }, { onSuccess: () => setEditing(null) });
-  }
+  const columns: AdminDataTableColumn<AchievementDTO>[] = [
+    { key: "title", header: "Judul", render: (a) => <span className="font-medium">{a.title}</span> },
+    { key: "achieved_at", header: "Tanggal", render: (a) => a.achieved_at?.slice(0, 10) ?? "-" },
+    {
+      key: "actions",
+      header: "",
+      className: "text-right",
+      render: (a) => (
+        <div className="flex justify-end gap-1">
+          <Button variant="ghost" size="icon" aria-label="Edit" onClick={() => setEditing(a)}>
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Hapus"
+            onClick={() => {
+              if (!window.confirm(`Hapus prestasi "${a.title}"?`)) return;
+              deleteAchievement.mutate(a.id, {
+                onSuccess: () => toast.success("Prestasi dihapus"),
+                onError: () => toast.error("Gagal menghapus prestasi"),
+              });
+            }}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-h2">Prestasi</h1>
-        <Button size="sm" onClick={() => setEditing("new")}>
-          <Plus size={16} className="mr-1.5" /> Tambah Prestasi
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-h2">Prestasi</h1>
+        <Button variant="gradient" onClick={() => setEditing(null)}>
+          <Plus className="h-4 w-4" /> Prestasi Baru
         </Button>
       </div>
-
-      <AdminDataTable
-        isLoading={isPending}
-        rows={achievements}
-        rowKey={(a) => a.id!}
-        columns={[
-          { key: "title", header: "Judul", render: (a) => a.title },
-          {
-            key: "achieved_at",
-            header: "Tanggal",
-            render: (a) => (a.achieved_at ? format(new Date(a.achieved_at), "d MMM yyyy") : "-"),
-          },
-          {
-            key: "actions",
-            header: "",
-            render: (a) => (
-              <div className="flex gap-1 justify-end">
-                <button onClick={() => setEditing(a)} aria-label="Edit" className="p-1.5 hover:text-iri-violet">
-                  <Pencil size={16} />
-                </button>
-                <button
-                  onClick={() => {
-                    if (confirm(`Hapus prestasi "${a.title}"?`)) remove.mutate(a.id!);
-                  }}
-                  aria-label="Hapus"
-                  className="p-1.5 hover:text-danger"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ),
-            className: "text-right",
-          },
-        ]}
-      />
-
-      <Modal
-        open={editing !== null}
-        onClose={() => setEditing(null)}
-        title={editing === "new" ? "Tambah Prestasi" : "Edit Prestasi"}
-      >
-        <AchievementForm
-          initial={editing !== "new" ? (editing ?? undefined) : undefined}
-          onSubmit={handleSubmit}
-          submitting={create.isPending || update.isPending}
-        />
-      </Modal>
+      <div className="mt-6">
+        <AdminDataTable columns={columns} rows={data ?? []} rowKey={(a) => a.id} isLoading={isLoading} />
+      </div>
+      <AchievementForm achievement={editing ?? null} open={editing !== undefined} onOpenChange={(open) => !open && setEditing(undefined)} />
     </div>
   );
 }

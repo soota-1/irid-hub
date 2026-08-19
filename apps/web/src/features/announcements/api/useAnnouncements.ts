@@ -1,22 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { Announcement } from "../types";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { AnnouncementDTO } from "@/shared/types/api";
 
-export function useAnnouncements(page = 1) {
-  return useQuery({
-    queryKey: ["announcements", "public", page],
-    queryFn: async () => apiClient.get<Announcement[]>(`/announcements?page=${page}&per_page=20`),
-  });
-}
+/** Public announcements for everyone; members additionally see
+ * members-only ones from /announcements/internal (Schema.md §2.8). */
+export function useAnnouncements() {
+  const apiClient = useApiClient();
+  const { isSignedIn } = useAuth();
 
-export function useInternalAnnouncements(page = 1) {
-  const { getToken } = useAuth();
   return useQuery({
-    queryKey: ["announcements", "internal", page],
+    queryKey: ["announcements", isSignedIn],
     queryFn: async () => {
-      const token = await getToken();
-      return apiClient.get<Announcement[]>(`/announcements/internal?page=${page}&per_page=20`, { token });
+      if (isSignedIn) {
+        const { data } = await apiClient<AnnouncementDTO[]>("/announcements/internal");
+        return data;
+      }
+      const { data } = await apiClient<AnnouncementDTO[]>("/announcements");
+      return data;
     },
   });
 }

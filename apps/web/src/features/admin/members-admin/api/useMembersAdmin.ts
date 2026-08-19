@@ -1,76 +1,68 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { MembershipApplication } from "@/features/membership";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { MembershipApplicationDTO, MembershipDTO } from "@/shared/types/api";
 
-export interface Membership {
-  id: string;
-  community_id: string;
-  user_id: string;
-  role: string;
-  status: string;
-  joined_at: string;
-  bio: string | null;
-}
-
-export function useMembershipApplications(status?: string) {
-  const { getToken } = useAuth();
+export function useMembershipApplications(status?: MembershipApplicationDTO["status"]) {
+  const apiClient = useApiClient();
   return useQuery({
     queryKey: ["admin", "membership-applications", status],
     queryFn: async () => {
-      const token = await getToken();
-      const q = new URLSearchParams({ per_page: "100" });
-      if (status) q.set("status", status);
-      return apiClient.get<MembershipApplication[]>(`/membership-applications?${q}`, { token });
+      const { data } = await apiClient<MembershipApplicationDTO[]>("/membership-applications", {
+        query: { status, per_page: 100 },
+      });
+      return data;
     },
   });
 }
 
-export function useApplicationMutations() {
-  const { getToken } = useAuth();
+export function useApproveApplication() {
+  const apiClient = useApiClient();
   const queryClient = useQueryClient();
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["admin", "membership-applications"] });
-    queryClient.invalidateQueries({ queryKey: ["admin", "members"] });
-  };
-
-  const approve = useMutation({
+  return useMutation({
     mutationFn: async (id: string) => {
-      const token = await getToken();
-      return apiClient.patch(`/membership-applications/${id}/approve`, undefined, { token });
+      const { data } = await apiClient<MembershipApplicationDTO>(`/membership-applications/${id}/approve`, {
+        method: "PATCH",
+      });
+      return data;
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "membership-applications"] }),
   });
-
-  const reject = useMutation({
-    mutationFn: async (id: string) => {
-      const token = await getToken();
-      return apiClient.patch(`/membership-applications/${id}/reject`, undefined, { token });
-    },
-    onSuccess: invalidate,
-  });
-
-  return { approve, reject };
 }
 
-export function useMembers() {
-  const { getToken } = useAuth();
+export function useRejectApplication() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data } = await apiClient<MembershipApplicationDTO>(`/membership-applications/${id}/reject`, {
+        method: "PATCH",
+      });
+      return data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "membership-applications"] }),
+  });
+}
+
+export function useMembers(params: { role?: MembershipDTO["role"]; status?: MembershipDTO["status"] } = {}) {
+  const apiClient = useApiClient();
   return useQuery({
-    queryKey: ["admin", "members"],
+    queryKey: ["admin", "members", params],
     queryFn: async () => {
-      const token = await getToken();
-      return apiClient.get<Membership[]>("/members?per_page=100", { token });
+      const { data } = await apiClient<MembershipDTO[]>("/members", {
+        query: { role: params.role, status: params.status, per_page: 100 },
+      });
+      return data;
     },
   });
 }
 
 export function useUpdateMemberRole() {
-  const { getToken } = useAuth();
+  const apiClient = useApiClient();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, role }: { id: string; role: string }) => {
-      const token = await getToken();
-      return apiClient.patch<Membership>(`/members/${id}/role`, { role }, { token });
+    mutationFn: async ({ id, role }: { id: string; role: MembershipDTO["role"] }) => {
+      const { data } = await apiClient<MembershipDTO>(`/members/${id}/role`, { method: "PATCH", body: { role } });
+      return data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "members"] }),
   });

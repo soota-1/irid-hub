@@ -1,20 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { AdminDashboardSummaryDTO } from "@/shared/types/api";
 
-export interface DashboardSummary {
-  active_member_count: number;
-  pending_applications: number;
-  upcoming_event_count: number;
-}
-
+/** Also doubles as the admin-access gate for AdminLayout: 403/401 from
+ * this query means "not an officer/admin", handled by the caller. */
 export function useDashboardSummary() {
-  const { getToken } = useAuth();
+  const apiClient = useApiClient();
+
   return useQuery({
-    queryKey: ["admin", "dashboard-summary"],
+    queryKey: ["admin", "dashboard", "summary"],
     queryFn: async () => {
-      const token = await getToken();
-      return (await apiClient.get<DashboardSummary>("/admin/dashboard/summary", { token })).data;
+      const { data } = await apiClient<AdminDashboardSummaryDTO>("/admin/dashboard/summary");
+      return data;
     },
     retry: false,
   });

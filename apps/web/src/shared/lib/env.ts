@@ -1,7 +1,7 @@
 function requireEnv(key: keyof ImportMetaEnv): string {
   const value = import.meta.env[key];
   if (!value) {
-    throw new Error(`Missing required env var: ${key} (check apps/web/.env)`);
+    throw new Error(`Missing required env var: ${key} (lihat .env.example)`);
   }
   return value;
 }

@@ -1,65 +1,57 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { Announcement } from "@/features/announcements";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { AnnouncementDTO } from "@/shared/types/api";
 
-export interface AnnouncementFormValues {
+export interface UpsertAnnouncementInput {
   title: string;
   content: string;
-  urgency: string;
-  visibility: string;
-  published: boolean;
+  urgency: AnnouncementDTO["urgency"];
+  visibility: AnnouncementDTO["visibility"];
+  published_at?: string | null;
 }
 
 export function useAnnouncementsAdmin() {
-  const { getToken } = useAuth();
+  const apiClient = useApiClient();
   return useQuery({
     queryKey: ["admin", "announcements"],
     queryFn: async () => {
-      const token = await getToken();
-      return apiClient.get<Announcement[]>("/admin/announcements?per_page=100", { token });
+      const { data } = await apiClient<AnnouncementDTO[]>("/admin/announcements", { query: { per_page: 100 } });
+      return data;
     },
   });
 }
 
-function toBody(values: AnnouncementFormValues) {
-  return {
-    title: values.title,
-    content: values.content,
-    urgency: values.urgency,
-    visibility: values.visibility,
-    published_at: values.published ? new Date().toISOString() : null,
-  };
-}
-
-export function useAnnouncementMutations() {
-  const { getToken } = useAuth();
+export function useCreateAnnouncement() {
+  const apiClient = useApiClient();
   const queryClient = useQueryClient();
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] });
-
-  const create = useMutation({
-    mutationFn: async (values: AnnouncementFormValues) => {
-      const token = await getToken();
-      return apiClient.post<Announcement>("/announcements", toBody(values), { token });
+  return useMutation({
+    mutationFn: async (input: UpsertAnnouncementInput) => {
+      const { data } = await apiClient<AnnouncementDTO>("/announcements", { method: "POST", body: input });
+      return data;
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] }),
   });
+}
 
-  const update = useMutation({
-    mutationFn: async ({ id, values }: { id: string; values: AnnouncementFormValues }) => {
-      const token = await getToken();
-      return apiClient.patch<Announcement>(`/announcements/${id}`, toBody(values), { token });
+export function useUpdateAnnouncement() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...input }: UpsertAnnouncementInput & { id: string }) => {
+      const { data } = await apiClient<AnnouncementDTO>(`/announcements/${id}`, { method: "PATCH", body: input });
+      return data;
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] }),
   });
+}
 
-  const remove = useMutation({
+export function useDeleteAnnouncement() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async (id: string) => {
-      const token = await getToken();
-      return apiClient.delete(`/announcements/${id}`, { token });
+      await apiClient(`/announcements/${id}`, { method: "DELETE" });
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "announcements"] }),
   });
-
-  return { create, update, remove };
 }

@@ -1,0 +1,32 @@
+{
+  "kicker": "Events",
+  "title": "Iridescent Calendar & Events",
+  "subtitle": "Regular practice, competitions, and community socials — all in one place.",
+  "tabs": { "list": "List", "calendar": "Calendar" },
+  "empty": "No events scheduled yet.",
+  "calendar": {
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "moreCount": "+{{count}} more",
+    "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  },
+  "detail": {
+    "srLabel": "Event details for {{title}}",
+    "rsvpTitle": "Your RSVP",
+    "signInToRsvp": "Sign in to RSVP to this event.",
+    "rsvpSaved": "RSVP saved",
+    "rsvpFailed": "Failed to save RSVP, try again"
+  },
+  "category": {
+    "training": "Training",
+    "competition": "Competition",
+    "social": "Social",
+    "other": "Other"
+  },
+  "rsvp": {
+    "going": "You're going",
+    "maybe": "Maybe going",
+    "not_going": "Not going",
+    "options": { "going": "Going", "maybe": "Maybe", "not_going": "Not going" }
+  }
+}

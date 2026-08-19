@@ -1,82 +1,75 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-import { AdminDataTable, AdminAccessDenied, Button, Modal } from "@/shared/components";
-import { ApiClientError } from "@/shared/lib/apiClient";
-import { useEventsAdmin, useEventMutations, type EventFormValues } from "../api/useEventsAdmin";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { AdminDataTable, type AdminDataTableColumn } from "@/shared/components";
+import { EVENT_CATEGORY_META } from "@/shared/lib/eventCategory";
+import type { EventDTO } from "@/shared/types/api";
+import { useEventsAdmin, useDeleteEvent } from "../api/useEventsAdmin";
 import { EventForm } from "./EventForm";
-import type { EventItem } from "@/features/events";
 
 export function EventsAdminPage() {
-  const { data, isPending, isError, error } = useEventsAdmin();
-  const { create, update, remove } = useEventMutations();
-  const [editing, setEditing] = useState<EventItem | null | "new">(null);
+  const { data, isLoading } = useEventsAdmin();
+  const deleteEvent = useDeleteEvent();
+  const [editing, setEditing] = useState<EventDTO | null | undefined>(undefined);
 
-  if (isError && error instanceof ApiClientError && error.status === 403) return <AdminAccessDenied />;
-
-  const events = data?.data ?? [];
-
-  function handleSubmit(values: EventFormValues) {
-    if (editing === "new") {
-      create.mutate(values, { onSuccess: () => setEditing(null) });
-    } else if (editing) {
-      update.mutate({ id: editing.id!, values }, { onSuccess: () => setEditing(null) });
-    }
-  }
+  const columns: AdminDataTableColumn<EventDTO>[] = [
+    { key: "title", header: "Judul", render: (e) => <span className="font-medium">{e.title}</span> },
+    {
+      key: "category",
+      header: "Kategori",
+      render: (e) => <span className={EVENT_CATEGORY_META[e.category].textClass}>{EVENT_CATEGORY_META[e.category].label}</span>,
+    },
+    { key: "start_at", header: "Tanggal", render: (e) => format(new Date(e.start_at), "d MMM yyyy HH:mm") },
+    {
+      key: "is_public",
+      header: "Visibilitas",
+      render: (e) => <Badge variant={e.is_public ? "success" : "default"}>{e.is_public ? "Publik" : "Privat"}</Badge>,
+    },
+    {
+      key: "actions",
+      header: "",
+      className: "text-right",
+      render: (e) => (
+        <div className="flex justify-end gap-1">
+          <Button variant="ghost" size="icon" aria-label="Edit" onClick={() => setEditing(e)}>
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Hapus"
+            onClick={() => {
+              if (!window.confirm(`Hapus event "${e.title}"?`)) return;
+              deleteEvent.mutate(e.id, {
+                onSuccess: () => toast.success("Event dihapus"),
+                onError: () => toast.error("Gagal menghapus event"),
+              });
+            }}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-h2">Event</h1>
-        <Button size="sm" onClick={() => setEditing("new")}>
-          <Plus size={16} className="mr-1.5" /> Tambah Event
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-h2">Events</h1>
+        <Button variant="gradient" onClick={() => setEditing(null)}>
+          <Plus className="h-4 w-4" /> Event Baru
         </Button>
       </div>
 
-      <AdminDataTable
-        isLoading={isPending}
-        rows={events}
-        rowKey={(e) => e.id!}
-        columns={[
-          { key: "title", header: "Judul", render: (e) => e.title },
-          { key: "category", header: "Kategori", render: (e) => e.category },
-          {
-            key: "start_at",
-            header: "Waktu",
-            render: (e) => (e.start_at ? format(new Date(e.start_at), "d MMM yyyy HH:mm") : "-"),
-          },
-          { key: "visibility", header: "Visibilitas", render: (e) => (e.is_public ? "Publik" : "Privat") },
-          {
-            key: "actions",
-            header: "",
-            render: (e) => (
-              <div className="flex gap-1 justify-end">
-                <button onClick={() => setEditing(e)} aria-label="Edit" className="p-1.5 hover:text-iri-violet">
-                  <Pencil size={16} />
-                </button>
-                <button
-                  onClick={() => {
-                    if (confirm(`Hapus event "${e.title}"?`)) remove.mutate(e.id!);
-                  }}
-                  aria-label="Hapus"
-                  className="p-1.5 hover:text-danger"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ),
-            className: "text-right",
-          },
-        ]}
-      />
+      <div className="mt-6">
+        <AdminDataTable columns={columns} rows={data ?? []} rowKey={(e) => e.id} isLoading={isLoading} />
+      </div>
 
-      <Modal open={editing !== null} onClose={() => setEditing(null)} title={editing === "new" ? "Tambah Event" : "Edit Event"}>
-        <EventForm
-          initial={editing !== "new" ? (editing ?? undefined) : undefined}
-          onSubmit={handleSubmit}
-          submitting={create.isPending || update.isPending}
-        />
-      </Modal>
+      <EventForm event={editing ?? null} open={editing !== undefined} onOpenChange={(open) => !open && setEditing(undefined)} />
     </div>
   );
 }

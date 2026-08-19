@@ -1,45 +1,37 @@
-import { useAuth } from "@clerk/clerk-react";
-import { Skeleton, StaggerReveal, StaggerItem } from "@/shared/components";
-import { useAnnouncements, useInternalAnnouncements } from "../api/useAnnouncements";
-import { AnnouncementBanner } from "./AnnouncementBanner";
+import { useTranslation } from "react-i18next";
+import { Skeleton } from "@/components/ui/skeleton";
+import { KickerLabel, AnnouncementBanner, StaggerReveal } from "@/shared/components";
+import { useAnnouncements } from "../api/useAnnouncements";
 
 export function AnnouncementsPage() {
-  const { isSignedIn } = useAuth();
-  // Signed-in members see members_only content too (via /announcements/internal);
-  // guests only see the public feed — Task.md Phase 2.3.
-  const publicQuery = useAnnouncements();
-  const internalQuery = useInternalAnnouncements();
-  const { data, isPending, isError } = isSignedIn ? internalQuery : publicQuery;
-  const announcements = data?.data ?? [];
+  const { data, isLoading } = useAnnouncements();
+  const { t } = useTranslation("announcements");
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
-      <h1 className="text-h1">Pengumuman</h1>
-      <p className="text-surface-muted mt-1">
-        {isSignedIn ? "Termasuk pengumuman khusus member." : "Info terbaru seputar komunitas."}
-      </p>
+    <div className="mx-auto max-w-3xl px-5 py-16">
+      <KickerLabel>{t("kicker")}</KickerLabel>
+      <h1 className="mt-3 font-display text-h1">{t("title")}</h1>
+      <p className="mt-3 text-body-lg text-muted-foreground">{t("subtitle")}</p>
 
-      {isError && <p className="text-danger mt-8">Gagal memuat pengumuman.</p>}
-
-      {isPending && (
-        <div className="mt-8 space-y-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-28" />
+      {isLoading && (
+        <div className="mt-10 flex flex-col gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-20 w-full rounded-md" />
           ))}
         </div>
       )}
 
-      {!isPending && announcements.length === 0 && !isError && (
-        <p className="text-surface-muted mt-8">Belum ada pengumuman.</p>
+      {!isLoading && (data?.length ?? 0) === 0 && (
+        <p className="mt-12 text-center text-muted-foreground">{t("empty")}</p>
       )}
 
-      <StaggerReveal className="mt-8 space-y-4">
-        {announcements.map((a) => (
-          <StaggerItem key={a.id}>
-            <AnnouncementBanner announcement={a} />
-          </StaggerItem>
-        ))}
-      </StaggerReveal>
+      {!isLoading && (data?.length ?? 0) > 0 && (
+        <StaggerReveal className="mt-10 flex flex-col gap-4">
+          {data!.map((announcement) => (
+            <AnnouncementBanner key={announcement.id} announcement={announcement} />
+          ))}
+        </StaggerReveal>
+      )}
     </div>
   );
 }

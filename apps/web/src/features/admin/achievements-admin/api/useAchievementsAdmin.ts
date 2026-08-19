@@ -1,47 +1,57 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
-import { apiClient } from "@/shared/lib/apiClient";
-import type { Achievement } from "@/features/achievements";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useApiClient } from "@/shared/hooks/useApiClient";
+import type { AchievementDTO } from "@/shared/types/api";
 
-export interface AchievementFormValues {
+export interface UpsertAchievementInput {
   title: string;
-  description: string;
+  description?: string;
   achieved_at: string;
-  icon_or_badge_url: string;
+  icon_or_badge_url?: string;
+  member_id?: string;
 }
 
-export function useAchievementMutations() {
-  const { getToken } = useAuth();
+export function useAchievementsAdmin() {
+  const apiClient = useApiClient();
+  return useQuery({
+    queryKey: ["admin", "achievements"],
+    queryFn: async () => {
+      const { data } = await apiClient<AchievementDTO[]>("/achievements", { query: { per_page: 100 } });
+      return data;
+    },
+  });
+}
+
+export function useCreateAchievement() {
+  const apiClient = useApiClient();
   const queryClient = useQueryClient();
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["achievements"] });
-
-  const create = useMutation({
-    mutationFn: async (values: AchievementFormValues) => {
-      const token = await getToken();
-      return apiClient.post<Achievement>("/achievements", { ...values, achieved_at: new Date(values.achieved_at).toISOString() }, { token });
+  return useMutation({
+    mutationFn: async (input: UpsertAchievementInput) => {
+      const { data } = await apiClient<AchievementDTO>("/achievements", { method: "POST", body: input });
+      return data;
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "achievements"] }),
   });
+}
 
-  const update = useMutation({
-    mutationFn: async ({ id, values }: { id: string; values: AchievementFormValues }) => {
-      const token = await getToken();
-      return apiClient.patch<Achievement>(
-        `/achievements/${id}`,
-        { ...values, achieved_at: new Date(values.achieved_at).toISOString() },
-        { token },
-      );
+export function useUpdateAchievement() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...input }: UpsertAchievementInput & { id: string }) => {
+      const { data } = await apiClient<AchievementDTO>(`/achievements/${id}`, { method: "PATCH", body: input });
+      return data;
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "achievements"] }),
   });
+}
 
-  const remove = useMutation({
+export function useDeleteAchievement() {
+  const apiClient = useApiClient();
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: async (id: string) => {
-      const token = await getToken();
-      return apiClient.delete(`/achievements/${id}`, { token });
+      await apiClient(`/achievements/${id}`, { method: "DELETE" });
     },
-    onSuccess: invalidate,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin", "achievements"] }),
   });
-
-  return { create, update, remove };
 }

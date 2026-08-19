@@ -1,56 +1,63 @@
-import { useRef } from "react";
-import type { ReactNode } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { useRef, type ReactNode } from "react";
+import { gsap } from "@/shared/lib/gsap";
+import { useReducedMotion } from "@/shared/hooks/useReducedMotion";
 import { cn } from "@/shared/lib/cn";
 
-export interface TiltCardProps {
+interface TiltCardProps {
   children: ReactNode;
   className?: string;
+  /** CSS color (any valid value, e.g. `oklch(62% .22 295 / 0.25)`) used for
+   * the hover glow shadow — identity color per feature (Design.md §4). */
+  glowColor?: string;
 }
 
-const MAX_TILT_DEG = 4;
-
-/** Wraps a card with the hover tilt from Design.md §6 — scale + shadow +
- * a subtle rotateX/rotateY that follows the cursor. Purely a hover affordance,
- * so it's disabled entirely under prefers-reduced-motion. */
-export function TiltCard({ children, className }: TiltCardProps) {
+/** Rest state: neutral border, no shadow. Hover: subtle 3D tilt (max ~4deg)
+ * + colored shadow glow — Design.md §4/§6. Tilt is skipped entirely under
+ * prefers-reduced-motion. */
+export function TiltCard({ children, className, glowColor = "oklch(62% .22 295 / 0.25)" }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotion();
 
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
-  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
-  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
-  const rotateX = useTransform(springY, [0, 1], [MAX_TILT_DEG, -MAX_TILT_DEG]);
-  const rotateY = useTransform(springX, [0, 1], [-MAX_TILT_DEG, MAX_TILT_DEG]);
+  const quickX = useRef<gsap.QuickToFunc | null>(null);
+  const quickY = useRef<gsap.QuickToFunc | null>(null);
 
-  if (prefersReducedMotion) {
-    return <div className={className}>{children}</div>;
+  function ensureQuickSetters(el: HTMLDivElement) {
+    if (!quickX.current) quickX.current = gsap.quickTo(el, "rotateX", { duration: 0.4, ease: "power3.out" });
+    if (!quickY.current) quickY.current = gsap.quickTo(el, "rotateY", { duration: 0.4, ease: "power3.out" });
   }
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseX.set((e.clientX - rect.left) / rect.width);
-    mouseY.set((e.clientY - rect.top) / rect.height);
+    if (reducedMotion || !ref.current) return;
+    const el = ref.current;
+    ensureQuickSetters(el);
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    quickY.current?.(px * 8);
+    quickX.current?.(py * -8);
   }
 
   function handleMouseLeave() {
-    mouseX.set(0.5);
-    mouseY.set(0.5);
+    if (reducedMotion || !ref.current) return;
+    ensureQuickSetters(ref.current);
+    quickX.current?.(0);
+    quickY.current?.(0);
   }
 
   return (
-    <motion.div
+    <div
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformPerspective: 800 }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      className={cn("will-change-transform", className)}
+      style={{ transformStyle: "preserve-3d", "--glow": glowColor } as React.CSSProperties}
+      className={cn(
+        "group rounded-lg border border-border bg-card transition-shadow duration-300 will-change-transform",
+        "hover:shadow-[0_20px_40px_-12px_var(--glow)] hover:scale-[1.02]",
+        "motion-safe:transition-transform",
+        className,
+      )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

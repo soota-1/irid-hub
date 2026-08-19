@@ -1,0 +1,7 @@
+{
+  "kicker": "Classes & Training",
+  "title": "Weekly Training Schedule",
+  "subtitle": "Weekly classes, from foundation to advanced. No audition needed.",
+  "empty": "No active training schedule yet.",
+  "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+}

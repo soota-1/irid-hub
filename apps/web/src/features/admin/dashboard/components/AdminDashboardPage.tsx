@@ -1,61 +1,39 @@
-import { Users, Clock4, CalendarCheck } from "lucide-react";
-import { Skeleton, AdminAccessDenied } from "@/shared/components";
+import { Link } from "react-router-dom";
+import { Users, Clock, CalendarDays } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardSummary } from "../api/useDashboardSummary";
-import { ApiClientError } from "@/shared/lib/apiClient";
 
+/** Amber accent on pending applications draws admin attention there —
+ * Design.md §8 ("angka pendaftaran pending pakai warna warning/amber"). */
 export function AdminDashboardPage() {
-  const { data, isPending, isError, error } = useDashboardSummary();
+  const { data, isLoading } = useDashboardSummary();
 
-  if (isError && error instanceof ApiClientError && error.status === 403) {
-    return <AdminAccessDenied />;
-  }
+  const cards = [
+    { label: "Member Aktif", value: data?.active_member_count, icon: Users, to: "/admin/members", accent: "text-foreground" },
+    { label: "Aplikasi Pending", value: data?.pending_applications, icon: Clock, to: "/admin/members", accent: "text-warning" },
+    { label: "Event Mendatang", value: data?.upcoming_event_count, icon: CalendarDays, to: "/admin/events", accent: "text-foreground" },
+  ];
 
   return (
     <div>
-      <h1 className="text-h2 mb-6">Dashboard</h1>
-
-      {isError && <p className="text-danger">Gagal memuat ringkasan dashboard.</p>}
-
-      <div className="grid sm:grid-cols-3 gap-4">
-        {isPending ? (
-          Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-28" />)
-        ) : (
-          <>
-            <StatCard icon={Users} label="Member Aktif" value={data?.active_member_count ?? 0} />
-            <StatCard
-              icon={Clock4}
-              label="Pendaftaran Pending"
-              value={data?.pending_applications ?? 0}
-              accent="warning"
-            />
-            <StatCard icon={CalendarCheck} label="Event Mendatang" value={data?.upcoming_event_count ?? 0} />
-          </>
-        )}
+      <h1 className="font-display text-h2">Dashboard</h1>
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {cards.map((card) => (
+          <Link
+            key={card.label}
+            to={card.to}
+            className="rounded-lg border border-border bg-card p-6 transition-colors hover:bg-secondary/40"
+          >
+            <card.icon className="h-5 w-5 text-muted-foreground" />
+            {isLoading ? (
+              <Skeleton className="mt-3 h-9 w-16" />
+            ) : (
+              <p className={`mt-3 font-display text-3xl font-bold ${card.accent}`}>{card.value ?? 0}</p>
+            )}
+            <p className="mt-1 text-sm text-muted-foreground">{card.label}</p>
+          </Link>
+        ))}
       </div>
-    </div>
-  );
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  accent,
-}: {
-  icon: typeof Users;
-  label: string;
-  value: number;
-  accent?: "warning";
-}) {
-  return (
-    <div className="rounded-md border border-neutral-200 bg-surface p-5">
-      <div className="flex items-center justify-between">
-        <p className="text-caption text-surface-muted">{label}</p>
-        <Icon size={18} className={accent === "warning" ? "text-warning" : "text-surface-muted"} />
-      </div>
-      <p className={`text-3xl font-display font-bold mt-2 ${accent === "warning" ? "text-warning" : "text-surface"}`}>
-        {value}
-      </p>
     </div>
   );
 }

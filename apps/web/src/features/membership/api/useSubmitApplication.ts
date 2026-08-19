@@ -1,12 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
-import { apiClient, ApiClientError } from "@/shared/lib/apiClient";
-import type { MembershipApplication, MembershipApplicationRequest } from "../types";
+import { apiRequest } from "@/shared/lib/apiClient";
+import type { MembershipApplicationDTO } from "@/shared/types/api";
+import type { SubmitMembershipApplicationInput } from "../types";
 
+/** Public, rate-limited endpoint — no auth token needed (router.go:
+ * POST /membership-applications only has publicRateLimit middleware). */
 export function useSubmitApplication() {
   return useMutation({
-    mutationFn: async (body: MembershipApplicationRequest) =>
-      (await apiClient.post<MembershipApplication>("/membership-applications", body)).data,
+    mutationFn: async (input: SubmitMembershipApplicationInput) => {
+      const { data } = await apiRequest<MembershipApplicationDTO>("/membership-applications", {
+        method: "POST",
+        body: input,
+      });
+      return data;
+    },
   });
 }
-
-export { ApiClientError };

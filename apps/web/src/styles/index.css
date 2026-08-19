@@ -5,35 +5,63 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+
   html {
-    font-family: theme("fontFamily.body");
+    color-scheme: dark;
+  }
+
+  html[data-theme="light"] {
+    color-scheme: light;
   }
 
   body {
-    background-color: var(--surface);
-    color: var(--surface-text);
+    @apply bg-background text-foreground font-body antialiased;
   }
 
   h1,
   h2,
-  h3 {
-    font-family: theme("fontFamily.display");
+  h3,
+  h4 {
+    @apply font-display;
   }
 
   :focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--iri-violet);
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
     border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-iridescent);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .bg-mesh-animated {
+    background-size: 200% 200%;
+    animation: mesh-move 12s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg-mesh-animated {
+      animation: none;
+    }
   }
 }
